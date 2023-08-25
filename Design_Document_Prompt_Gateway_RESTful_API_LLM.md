@@ -2,11 +2,21 @@
 ## *Design Document Sub-Title: &#xA;&quot;Designing a Prompt Gateway with RESTful API Integration, Plugin-based Prompt Transformations, and Admin Configuration for an External LLM&quot;*
 
 ## *Abstract*
-*The design document outlines the creation of a Prompt Gateway for an external LLM. The Prompt Gateway will be accessible to clients through a specific RESTful API URL. Its main function is to reliably accept prompts, apply optional transformations, and send the transformed prompts to the LLM. To achieve this, the Prompt Gateway will utilize any number of external and/or internal Plugin modules for prompt transformations. The order of these transformations will be determined by an internal rule engine. An Admin will have the ability to configure the Prompt Gateway with any number of Plugins. These Prompt Transformation Plugins will be accessible to the Prompt Gateway only through their respective RESTful endpoint URLs.*&#xA;**&#xA;*In addition to the development of the Prompt Gateway, the design document also specifies the creation of a local startup shell script. This script will be used to initiate the Prompt Gateway on a local machine. Furthermore, deployment artifacts for Ansible and Docker will be created to facilitate the deployment of the Prompt Gateway in different environments. Finally, comprehensive documentation will be produced to cover various aspects such as usage instructions, plugin configuration guidelines, and troubleshooting tips. This documentation will serve as a valuable resource for users and administrators of the Prompt Gateway.*
+*The design document for the Prompt Gateway task outlines the creation of a RESTful API accessible Prompt Gateway for an external LLM. The Prompt Gateway is responsible for reliably accepting prompts, applying optional transformations, and sending the transformed prompts to the LLM. To achieve this, the Prompt Gateway utilizes a combination of internal and external Plugin modules for prompt transformations. The order of these transformations is determined by an internal rule engine. The Prompt Gateway can be configured by an Admin with any number of Plugins, which are accessible via their respective RESTful endpoint URLs.*&#xA;**&#xA;*In addition to the Prompt Gateway implementation, the design document also specifies the need for a local startup shell script. This script will be used to initiate the Prompt Gateway and ensure its proper functioning. Furthermore, deployment artifacts for Ansible and Docker are required to facilitate easy deployment and management of the Prompt Gateway in different environments.*&#xA;**&#xA;*To ensure seamless usage and configuration of the Prompt Gateway, comprehensive documentation needs to be produced. This documentation should cover various aspects such as usage instructions, plugin configuration guidelines, and troubleshooting techniques. By providing detailed documentation, users and administrators will have a clear understanding of how to interact with and maintain the Prompt Gateway effectively.*
 
 ## *Task*
 ```Task
-Create a Prompt Gateway for an external LLM with these specifications:&#xA;- Prompt Gateway is accessible to clients via a specific RESTful API URL.&#xA;- Prompt gateway reliably accepts prompts, then applies optional transformations, and sends transformed prompts to the LLM.&#xA;- Prompt Gateway handles Prompt Transformations via any number of external and/or internal Plugin modules.&#xA;- Prompt Gateway uses an internal rule engine to determine the order of the Prompt Transformations by the Plugins.&#xA;- An Admin can configure the Prompt Gateway with any number of Plugins.&#xA;- Prompt Transformation Plugins are accessible to the Prompt Gateway only via their respective RESTful endpoint URLs.&#xA;&#xA;Provide a local startup shell script.&#xA;Create deployment artifacts for Ansible and Docker.&#xA;Produce comprehensive documentation: usage, plugin configuration, and troubleshooting.
+Create a Prompt Gateway for an external LLM with these specifications:
+- Prompt Gateway is accessible to clients via a specific RESTful API URL.
+- Prompt gateway reliably accepts prompts, then applies optional transformations, and sends transformed prompts to the LLM.
+- Prompt Gateway handles Prompt Transformations via any number of external and/or internal Plugin modules.
+- Prompt Gateway uses an internal rule engine to determine the order of the Prompt Transformations by the Plugins.
+- An Admin can configure the Prompt Gateway with any number of Plugins.
+- Prompt Transformation Plugins are accessible to the Prompt Gateway only via their respective RESTful endpoint URLs.
+
+Provide a local startup shell script.
+Create deployment artifacts for Ansible and Docker.
+Produce comprehensive documentation: usage, plugin configuration, and troubleshooting.
 ```
 
 ## *Design*
@@ -19,23 +29,27 @@ Create a Prompt Gateway for an external LLM with these specifications:&#xA;- Pro
 left to right direction
 actor "API Caller" as API
 actor "Admin" as Admin
-rectangle "Sending Prompts to the Gateway" as UC1 {
-  API -- (Send Prompts)
+rectangle "Sending Prompts to the Gateway" as SPG {
+  (Sending Prompts to the Gateway) as SPG1
+  API -- SPG1
 }
-rectangle "Handling Prompt Transformations" as UC2 {
-  (Handle Transformations) .> (Send Prompts) : <<extends>>
+rectangle "Handling Prompt Transformations" as HPT {
+  (Handling Prompt Transformations) as HPT1
+  SPG1 <.. HPT1 : <<uses>>
 }
-rectangle "Configuring the Prompt Gateway" as UC3 {
-  Admin -- (Configure Gateway)
+rectangle "Configuring the Prompt Gateway" as CPG {
+  (Configuring the Prompt Gateway) as CPG1
+  Admin -- CPG1
 }
-rectangle "Accessing Transformation Plugins" as UC4 {
-  (Access Plugins) .> (Configure Gateway) : <<uses>>
+rectangle "Accessing Transformation Plugins" as ATP {
+  (Accessing Transformation Plugins) as ATP1
+  CPG1 <.. ATP1 : <<uses>>
 }
 @enduml
 ```
 
 
-![Use Cases](https://www.plantuml.com/plantuml/dsvg/P951JiCm44NtFiKegtPHf1PMg8fQPK7PHG8EC4ecgIN7HlP4W10dOy6Hk08Pkmaax6pFd___axy_lmw1qNFV6MMeOM07NhTdXbfxgbWxgx1Yvo4xblTGe37aCy00mtMQr9sswL5EIXRHjeOWUo1RQzj2wLttp47i-KnmXqml-1Ptdeejl2iGGzXiO2KhetwjFlwwdT3MvjSE7ZtQq3ZVeHGD5xjTj5j5CIqrQxZA5nbm2_izlVBm5l9ydbWus-Yszn8gnI_1y_xNgR-mHu9nQU9SO1ohYa8GotavA4tVwedZ9d4azJXB_VydH8W-K28u32p3b_u0003__mC0)
+![Use Cases](https://www.plantuml.com/plantuml/svg/X991ReCm44Ntd6B4AYmIATiAHK5U9DrP2XSOWN4i6Rko1qLLr9DrqIFr2cN0QOCg9Ji6dl-V1tn_VkqZOQ2XjvbL7G5v24QV2LeJL4F6kmmRyW7oIhw2G6jLo04ZZEFlaxOtRhx9LnaVHAUjWloaN6kS1Xby_qQHu-ciu82aBlW-dJd90rmpWDLZjaZiTaHvbVLwdZxkwuxeMlkN0NL05piVUcIJEFKTPJttFO6B17CXDq6vsKmpl41P3b75tMxPBhphZ1u2P_BcAVTULjna7xD5OYTPVgUiA_xfLasZOkI8vUuWxQ1DygrgELS-euj4Swcu2VEy5DwFdsdyNNu0003__mC0)
 
   
 
@@ -47,18 +61,28 @@ rectangle "Accessing Transformation Plugins" as UC4 {
 Description:
 *API Callers send prompts to the Prompt Gateway which are then transformed and sent to the LLM. *
 
+
 ### *Actors:*
+
 - API Caller
 
+
 ### *Pre-conditions:*
+
 - The API Caller is connected to the Prompt Gateway.
 
+
 ### *Post-conditions:*
+
 - The transformed prompts are sent to the LLM.
 
 
+
 ### *Flow:*
-- The API Caller sends a prompt to the Prompt Gateway.- The Prompt Gateway applies optional transformations to the prompt.- The transformed prompt is sent to the LLM.
+
+- The API Caller sends a prompt to the Prompt Gateway.
+- The Prompt Gateway applies optional transformations to the prompt.
+- The transformed prompt is sent to the LLM.
 
 
 
@@ -71,15 +95,16 @@ title Sending Prompts to the Gateway Robustness Diagram
 actor "API Caller" as A <<actor>>
 boundary "Prompt Gateway API" as B <<boundary>>
 control "Prompt Gateway" as C <<control>>
+entity "Prompts" as D <<entity>>
 
 A -> B : Sends a prompt
-B -> C : Applies optional transformations to the prompt
-C -> A : Sends the transformed prompt to the LLM
+B -> C : Delegates prompt processing
+C -> D : Transforms and sends prompt to LLM
 @enduml
 ```
 
 
-![Robustness](https://www.plantuml.com/plantuml/dsvg/N911QiCm44NtEiNWVIvGWedYGYaa498JJ68r5SWQCJCcv6nTz4YvGiQguqMt_x_taURnyxiHHTPnI4wZfW2daFkOht1W6eeAA85-1_X03JUymv7EesWE8l0UySeuE8SN9OR67pwXmvG2Du027jRhshIjEzEOU-GxD7-povmv5TuQ_8AClr1MflGVhsXdwDmRwJoiMjFVwiC544fLt7RAEyjzAIa60IeQAMC2PSpoHJpW52m_dBrkylooDpMB4FgPUZcxtTvjZBFpFG400F__0m00)
+![Robustness](https://www.plantuml.com/plantuml/svg/ND1HQiCm30RWTvz2vBqN62KqJM0CMYZjBg0cMXPmx68fb9vj3plIhh0_Rjg7FXcapxyj_VtyRjGusJHwPuDvePE4RWWz7L8SBwPaaUnRw9rDhdoZOpnFQa5KgHcuJpmwnwt5H4Lr-A2QlPTK42jLj5xdJbcwSvn2n-b6nJts6OSx6M-17mY-ZS5IzAyyqnfqwKDAmBUVkPf50t6l0xYALYNot_9aIaoNJDrshjUeD-AbnmEwTEQZnO3OWgjdr01z9Wxw5TE8XD2Hvgp5OqMxtTvjKCCU_m400F__0m00)
 
   
 
@@ -93,28 +118,28 @@ C -> A : Sends the transformed prompt to the LLM
 title Sending Prompts to the Gateway Sequence Diagram
 
 actor "API Caller" as A
-entity "Prompt Gateway API" as B
+boundary "Prompt Gateway API" as B
 control "Prompt Gateway" as C
-entity "LLM" as D
+entity "Prompts" as D
 
 A -> B : Sends a prompt
 activate B
-B -> C : Applies optional transformations to the prompt
+B -> C : Delegates prompt processing
 activate C
-C -> D : Sends the transformed prompt
+C -> D : Transforms and sends prompt to LLM
 activate D
-D --> C : Acknowledgement
+D --> C : Acknowledges receipt
 deactivate D
-C --> B : Acknowledgement
+C --> B : Returns transformed prompt
 deactivate C
-B --> A : Acknowledgement
+B --> A : Returns transformed prompt
 deactivate B
 
 @enduml
 ```
 
 
-![Sequence](https://www.plantuml.com/plantuml/dsvg/V95DQWCn34RtEeMOVIxGHScC1qeXXK1F86RKgQd_OYiDELiMELAlKDcbGqaXM-bzpv_mr-MwBK9PZjw1M76Chnnc6nRSv-YJ59I8yixuHC8dEklwSEGmCOwMbamUW2Q96Rj-_uo6dEFS8HNiWOCApzZzY5Q1SWqOO8f1SdItHDkQDRxRlRJ92D3ZvX47V6WT2nAc5gmDxAU6rJbKn2ZIf-Gi5un9R0paK3A5yXQpfpfOxxfL631LCQwlL6ZDylmlCCA8czz7fuyGJuxdXRtsXvd_OAPXmttCr0iKw-zZ0y1Ms-clVGC00F__0m00)
+![Sequence](https://www.plantuml.com/plantuml/svg/Z95DJWCn38NtFeKr-rw01MecaH1IaIhW0YOnmuXCqYOPgfwD1KVY2ZXX-YDMh2BPttj-Thu_lzQvK2hpvA6CnJC-SN1Z672RuhGh6Kl4yiPuHuKFT9JsVkPW6Sr8Gw89W6o92JkrlKTDtdFga38gU8bpS9IEsFrQdIs4R4WFDeQIelzBjAu63fBeBC-jQW0KhcwnnvkMD2FXhlLhZl533CIthuWMnB3dGMfvWUfZEMTPyC9hq9KtmZyd2larfabyWyFS9YnIESHcyt2H6J2uMkOe-nxYmRCRP5HYowC4Sdp5wiRMs8zSvXJaiATPx4uhN2bqNK8Kwj-A7c0jUUKdVm000F__0m00)
 
   
 
@@ -142,7 +167,7 @@ stop
 ```
 
 
-![Activity](https://www.plantuml.com/plantuml/dsvg/R911QiCm44NtEiLVEbU8DmaDb402WVO2WprE1R96QAODFbiMFLAlKDcEJGfTQlJ__3V_v_wzKwDidtrmvYqmtZYsFbvnoT8dKvZ0FXYlP7oZ0Vl6_9Ut0GTFrqozSvFVRVUN8rue1CxmYaPYvCQuNVppkcLDxPplK3rvjCGg26dM_UlQZBE8Qc3TE63xznUKKl2ia6HU8WLOfgYTv9x6mNhA756F6zuNHG5z91Vumh8Id4xdsd5GHXLbIds2RgN4HR69VeKl-b9XDpOZoUtAexJx2m00__y30000)
+![Activity](https://www.plantuml.com/plantuml/svg/R911QiCm44NtEiLVEbU8DmaDb402WVO2WprE1R96QAODFbiMFLAlKDcEJGfTQlJ__3V_v_wzKwDidtrmvYqmtZYsFbvnoT8dKvZ0FXYlP7oZ0Vl6_9Ut0GTFrqozSvFVRVUN8rue1CxmYaPYvCQuNVppkcLDxPplK3rvjCGg26dM_UlQZBE8Qc3TE63xznUKKl2ia6HU8WLOfgYTv9x6mNhA756F6zuNHG5z91Vumh8Id4xdsd5GHXLbIds2RgN4HR69VeKl-b9XDpOZoUtAexJx2m00__y30000)
 
   
 
@@ -153,24 +178,22 @@ stop
 
 ```plantuml
 @startuml
-title Sending Prompts to the Gateway State Diagram
+title State Diagram for Sending Prompts to the Gateway
 
-state "API Caller Connected" as S1
-state "Prompt Sent to Gateway" as S2
-state "Prompt Transformed" as S3
-state "Transformed Prompt Sent to LLM" as S4
+state "API Caller Connected" as start
+state "Prompt Sent to Gateway" as sent
+state "Prompt Transformed" as transformed
+state "Prompt Sent to LLM" as end
 
-[*] --> S1
-S1 --> S2 : API Caller sends a prompt
-S2 --> S3 : Prompt Gateway applies transformations
-S3 --> S4 : Transformed prompt is sent to LLM
-S4 --> [*]
-
+[*] --> start
+start --> sent : API Caller sends a prompt
+sent --> transformed : Prompt Gateway applies transformations
+transformed --> end : Transformed prompt is sent to LLM
 @enduml
 ```
 
 
-![State](https://www.plantuml.com/plantuml/dsvg/N91DQWCn34RtEiL7be4iyhFgegIa40ef1AQxqeLetDJWiGTBeVHiNVH8lKBbSGn3TZ9wUlhalv_VhIXdlVI1r6jmw5my-NZ6CQT-K84cwAV3djLzyJSwjGAFdi-PUo8PdxE7unDs78BBsAKOtRkwqmmiw9ODgRwYr-Ay-Ygqke5UCaVvIBblbdK39XtS60-7vmflY5xdRrWixilwRbch5UumYIbsfe0nZ1AozaYjZRfwsyKy3C4x-uYscjMdA6JiEBAnaMciQeINigCb8yCARS68jhRRFlmV003__mC0)
+![State](https://www.plantuml.com/plantuml/svg/T94nQWCn44LxdUApfM4lu28uhC4ODc1mkf1Yy2gEG2i9QOBnsLpaIBb2Hbe52qDA3U-_-OD-Rj-Rn1JvQxQA3LkD8nDhR0sT8ytuy157xIRZpZX4FmTEO0_-rDW9Tw6hKgaakkV37WDPgoC6xvm-iPuwK49Py4SjakpaBAgIXPFP0_OQoINfC5SLtz__2CVnfP3IMQctrJlw_kdU8FBopl0QJMEPJ0c4K6og09bi5agWxggbGI5OevjMnCQxfDfGbeXRmiqjTGtCSdJjhJO2oaVy0W00__y30000)
 
   
 
@@ -184,16 +207,15 @@ S4 --> [*]
 title Class Diagram for Sending Prompts to the Gateway
 
 class APICaller {
-  -connectionStatus: boolean
+}
+
+class PromptGatewayAPI {
   +sendPrompt(prompt: Prompt): void
 }
 
 class PromptGateway {
-  -prompt: Prompt
-  -transformedPrompt: Prompt
-  +receivePrompt(prompt: Prompt): void
-  +applyTransformations(): void
-  +sendTransformedPrompt(): void
+  +processPrompt(prompt: Prompt): void
+  +transformPrompt(prompt: Prompt): Prompt
 }
 
 class Prompt {
@@ -209,14 +231,16 @@ class LLM {
   +receivePrompt(prompt: Prompt): void
 }
 
-APICaller "1" -- "1" PromptGateway : Sends >
-PromptGateway "1" -- "1" Prompt : Transforms >
-PromptGateway "1" -- "1" LLM : Sends >
+APICaller -- PromptGatewayAPI : Sends prompt >
+PromptGatewayAPI -- PromptGateway : Delegates prompt processing >
+PromptGateway -- Prompt : Transforms >
+PromptGateway -- LLM : Sends transformed prompt >
+
 @enduml
 ```
 
 
-![Class](https://www.plantuml.com/plantuml/dsvg/Z59BQiCm4Dth54DMBiQBRhqeAIwKGWe1-m9JP-eAPCb8auGGUh8kUgHUeV8dSMGteQk1D_C-CzBFr_VICLhUragmP4MGANGEdYHM5cjuDnPoqXkfArXRKpViW0tm1y4pCktn84JPCHxNBnagHHQE0Y0fZTPKiZGwP-IjI-7D64MeVJDsNh5NYvgkf8FuNGex8pVYywJQmuDLhnmoMeGjQkUJrZIeNZHZIoN97TsqysFODEfGd8Im3UwYYtuRkPZwH5Voda_0fBrPpjRVRv8qctNZYdX0M-40BsR4SCIDr8bjiCDVEjSppRPRhLwxrVvrLCyQ_yJYVW59qfNmITFkUpbu424-8_Z9S_YRust8KNNfg__Slm000F__0m00)
+![Class](https://www.plantuml.com/plantuml/svg/X99BQiCm48RtEiKi4u8lu4L9SQ0KKWWa5n3sr1N8Sj1CKqBfoRheaNg5ZYt7JgMuNLcU-RzvVtz-hOcrvzV6AZPi4GghYM1ZTErr0y-jXpswohWQThvjZap0BV0BmeDcVDDdfSgUkDyz5jfQzF2kFYx6W0nAKOWFO4KIC7WMn_wJ3y9b3gVML3DyW8KeaUXFNcJijIEflfaJXaUSgi-HbQrZTABUivVEEzCO3wiYyQvgvC6wM4RsGmB-bj24Hcclkg6RSUPhIWQvtJw5yNaiqPpml_5FsyooT8jvVnC40OSxbIXYIf0DMgpbRyI6JNQd5KMOSE76nkcMh6liKixLFARIr5fySju_0000__y30000)
 
   
 
@@ -224,18 +248,28 @@ PromptGateway "1" -- "1" LLM : Sends >
 Description:
 *The Prompt Gateway handles prompt transformations via external and/or internal Plugin modules. *
 
+
 ### *Actors:*
+
 - Prompt Gateway
 
+
 ### *Pre-conditions:*
+
 - The Prompt Gateway has received a prompt.
 
+
 ### *Post-conditions:*
+
 - The prompt has been transformed by the Plugin modules.
 
 
+
 ### *Flow:*
-- The Prompt Gateway receives a prompt.- The Prompt Gateway uses the internal rule engine to determine the order of transformations.- The Prompt Gateway sends the prompt to the Plugin modules for transformation.
+
+- The Prompt Gateway receives a prompt.
+- The Prompt Gateway uses the rule engine to determine the order of transformations.
+- The Prompt Gateway sends the prompt to the Plugin modules for transformation.
 
 
 
@@ -246,17 +280,21 @@ Description:
 title Handling Prompt Transformations Robustness Diagram
 
 actor "Prompt Gateway" as A <<actor>>
-boundary "Plugin RESTful endpoints" as B <<boundary>>
-control "Internal Rule Engine" as C <<control>>
+boundary "Plugin Modules" as B <<boundary>>
+control "Rule Engine" as C <<control>>
+entity "Prompts" as D <<entity>>
+entity "Transformation Rules" as E <<entity>>
 
-A -> C : Receives a prompt
-C -> A : Determines the order of transformations
-A -> B : Sends the prompt to the Plugin modules for transformation
+A -> B : Sends a prompt to Plugin Modules
+A -> C : Uses Rule Engine
+C -> D : Determines the order of transformations
+C -> E : Determines the order of transformations
+B -> D : Transforms the prompt
 @enduml
 ```
 
 
-![Robustness](https://www.plantuml.com/plantuml/dsvg/N93DRSCm34RlceBmFGiKWH7d1srkXPC569js1KYa8L4DCbiF7QahbBNTGtkK-Bs7Z_pw-DnbnQGb1gTU0y4BSXyyZ_2Q94uAruIS1qaHrGjdQELMiZBb34UFOyBe77Og2QgLU4QbEpugm0mDRBVpjAxTJGhtc1uM36Nq3EtfSXrA0E9-4i-QPsHlo6_Kg4vOamIepgoK60EqnMgUs0mq0mS3rfJbNGERslwUeAME_3jbG9ZcPkxmCsfiT2HpHHDaq3S2IJqba07qxxABQs_0nJeksKK5AlDhtIHARwKo6FhFuNP6sdM_0G00__y30000)
+![Robustness](https://www.plantuml.com/plantuml/svg/bD71ReCm30RWUvx2ujuNc2hK5j1sgJInxG7SuZAa45UnKSMpxR17sYlC8wM2uwxnv_XtylFrlHF5g4FldNRg2LumDBuBBRn6xgyAxn63N3Zsg1q7WPfFWsWW4IWxR2Fspk5PEK9sxtX6fHkE6Q307hRRgPhdxiH3Q32E1ltGTW6Et0oUP887WpCmU-QWaJrajGceWd6QN67kNZH6mKAFy-HqKsaYdI_0UWke7tEhfNPxsEGMvGdUA3G22DUqaZAiCoTPcFmG4bYaTCLVfRHAIKgnjoC1_IJWs504le2kNpGrLFzeECmJ7bkbXXJMxIox_USl0000__y30000)
 
   
 
@@ -270,24 +308,23 @@ A -> B : Sends the prompt to the Plugin modules for transformation
 title Handling Prompt Transformations Sequence Diagram
 
 actor "Prompt Gateway" as A
-boundary "Plugin RESTful endpoints" as B
-control "Internal Rule Engine" as C
+boundary "Plugin Modules" as B
+control "Rule Engine" as C
+entity "Prompts" as D
+entity "Transformation Rules" as E
 
-A -> C : Receives a prompt
-activate C
-C -> A : Determines the order of transformations
-deactivate C
-activate A
-A -> B : Sends the prompt to the Plugin modules for transformation
-activate B
-B --> A : Returns transformed prompt
-deactivate B
-deactivate A
+A -> D : Receives a prompt
+A -> C : Uses Rule Engine
+C -> D : Determines the order of transformations
+C -> E : Determines the order of transformations
+A -> B : Sends the prompt to Plugin Modules
+B -> D : Transforms the prompt
+D -> A : Returns transformed prompt
 @enduml
 ```
 
 
-![Sequence](https://www.plantuml.com/plantuml/dsvg/N951KW8n44NtESKlzbp0XSKCKEhE6hX0EsamLPdEc7ImE9iBZ-GLR0P4T9Uk_Fx__UJhutDHbBBM8JeD6XcF93u6sUCvfs5KR3D9sQKya8Oa1Hj-gomzOnLedsbmZdfD6REB_e6Kt-au0nKqxYLLyPIFTXthFWYwzMQxgn4iVan1j4p2rlL9DAU8sPCePw68hXhDMco99ytIkGRpUonnXuvx3WSk88nJx0aY72pQPCkJgZ7LYirgiFq2VMMax3aZxQ1_ApdFDzlNOtEEQyreOxHdZtCQD4tJfTEGlB4McEK_xr-trhMONxWwrfhjAQzQzZyrRb3Qsw5n2sEmN_e6003__mC0)
+![Sequence](https://www.plantuml.com/plantuml/svg/b54xJiGm4ErzYgVqN802RNw21ccLXGEOU3POSknbF0RbR1GSYIjW4X9jIjhtcVTcvllpwn15iwJHAR7Y20_Q6sVzW2E7yI9uOktZEV2enGOVSQAtHBudD5OFh4UbT2-1KVpfxxNGXvuAw8XIlOJaZUOfqouDrkCncEGepdIb-k25WqFHPH2jpmgQgLgHptscTUnYQ3PqtmhTDhDLgiJD7HhSegEUx3j5Q5pcAGjLP-evPlWgLDMhgI4X7ZCK8Q-4m8OOuGpPts4njFympDbLDfp8cqMxj884xA-ZghNDjkUrGJM_T3blA8dpKxOiCglca5FoLty0003__mC0)
 
   
 
@@ -302,14 +339,17 @@ title Handling Prompt Transformations Activity Diagram
 
 start
 :Prompt Gateway receives a prompt;
-:Prompt Gateway uses the internal rule engine to determine the order of transformations;
+
+:Prompt Gateway uses the rule engine to determine the order of transformations;
+
 :Prompt Gateway sends the prompt to the Plugin modules for transformation;
+
 stop
 @enduml
 ```
 
 
-![Activity](https://www.plantuml.com/plantuml/dsvg/P90n3i8m34NtdCBdW0Ka91WxS06BkCLIubIEKzIpCN0ahe1RM83H_j_lstxU7xjggDPo2iQM24ueCR4Cq6d9ey5PKMfVDADnaGhxY_74DiE1SL3C8Qo0iFduZsXqmncKBiGJLK0OLsNxPsdLPRiIi1YfO09jlW79m49W1I9vFw-5kuf6KYWzsFTA_-1A4j_aT_J2MgekDKT3Bj5pAZZYXxNrOyeOTZxl7ta1003__mC0)
+![Activity](https://www.plantuml.com/plantuml/svg/RD0x3i8m30RWFQVmEUXI92GOEt01gt6BfJmgnodYR0mSYIlWjYmyHkktlZ_ny_veYw9eZS4fQo0uOVA1qmYTv3Wfd0LJ6R94LCwfmBvNdbblS60S1QDpA-1sx_qZAbtn1a8zyKm54AOrQTpFJYsMwuL0gZLJ6ZaHQ0PFIXBNmS8idWJo0Fhvb3zWeUGtSUjSi6NgGZKROlPMLC2CBwnPlf4drnfWjtW1003__mC0)
 
   
 
@@ -320,22 +360,24 @@ stop
 
 ```plantuml
 @startuml
-title Handling Prompt Transformations State Diagram
+title State Diagram for Handling Prompt Transformations
 
 state "Prompt Received" as A
-state "Order Determined" as B
-state "Prompt Transformed" as C
+state "Determining Transformation Order" as B
+state "Prompt Transformation" as C
+state "Prompt Transformed" as D
 
 [*] --> A
-A --> B : Determine Order
-B --> C : Transform Prompt
-C --> [*]
+A --> B : Use Rule Engine
+B --> C : Send Prompt to Plugin Modules
+C --> D : Transform Prompt
+D --> [*]
 
 @enduml
 ```
 
 
-![State](https://www.plantuml.com/plantuml/dsvg/N8yn3i8m34LtdyBgYDGBCA2swS060ZR4O15JHMhIoZ5SZe4ZSGMYA1I9oRBUzxFzVhwQg2HwzoEeqv5nIy6EBWoubydFYYUX46-JU58tXOX79MNi7Gr27Y3cjYhX0r_PFTXMI17RBzo9PS6UbSMxK6ZtDxhiATm0d5SNhEjD4hMvThZ-MJ1ReSl49B88okLWCaeIW8Q3JIz-0000__y30000)
+![State](https://www.plantuml.com/plantuml/svg/T91D2i8m44RtSuh1fU05N4Xj8xWHYpyhSH7CM09D8idKoxdmI5x1CRH21LUpU6--ZvdNuraarf4xrm9RRWdth9bGMTr4xV0Q8gwrDwtr3TOnk1lZ8MgV13ZDDlW4aFBAfCSxkf2zavcWJhWSe2AcwAp_v8m3S1iDnMoNFr5ZCIlLFwKlL02dwHbdiuLqB_CiSOx7HBZhvBoLRwmdA3EfXEp9c-4o3bYtdGYu2KRi15Nsb7ZVebu6bP6K0HII8Hzy0m00__y30000)
 
   
 
@@ -351,36 +393,52 @@ title Class Diagram for Handling Prompt Transformations
 class PromptGateway {
   +receivePrompt(prompt: Prompt): void
   +sendPromptToPlugin(prompt: Prompt): void
-}
-
-class InternalRuleEngine {
-  +determineTransformationOrder(prompt: Prompt): TransformationOrder
+  +useRuleEngine(): void
 }
 
 class PluginModule {
   +transformPrompt(prompt: Prompt): Prompt
 }
 
+class RuleEngine {
+  +determineOrderOfTransformations(prompts: Prompts, rules: TransformationRules): void
+}
+
 class Prompt {
   -content: String
-  -transformationOrder: TransformationOrder
   +getContent(): String
-  +getTransformationOrder(): TransformationOrder
+  +setContent(content: String): void
 }
 
-class TransformationOrder {
-  -order: Array<String>
-  +getOrder(): Array<String>
+class Prompts {
+  -prompts: List<Prompt>
+  +getPrompts(): List<Prompt>
+  +setPrompts(prompts: List<Prompt>): void
 }
 
-PromptGateway "1" -- "1" InternalRuleEngine: Uses
-PromptGateway "1" -- "*" PluginModule: Sends prompt to
-Prompt "1" -- "1" TransformationOrder: Has
+class TransformationRule {
+  -order: Integer
+  +getOrder(): Integer
+  +setOrder(order: Integer): void
+}
+
+class TransformationRules {
+  -rules: List<TransformationRule>
+  +getRules(): List<TransformationRule>
+  +setRules(rules: List<TransformationRule>): void
+}
+
+PromptGateway "1" -- "1..*" PluginModule : sends prompt to >
+PromptGateway "1" -- "1" RuleEngine : uses >
+RuleEngine "1" -- "1" Prompts : determines order of transformations >
+RuleEngine "1" -- "1" TransformationRules : determines order of transformations >
+PluginModule "1..*" -- "1" Prompts : transforms >
+
 @enduml
 ```
 
 
-![Class](https://www.plantuml.com/plantuml/dsvg/X5BDJiCm3BxtAQoUDb0FN2k4XWO23eW9nWD4ZLT5IfCfSOScn9Dnu95u1TowWrPjnIcj_VtPoVVdrogI2bHNDY535c5jLOnmOrGPL0Kx7-1UEMsDAs4JVBKds0Rb8ZSgHSQxc2H5Iv7kdI9yKqTuJm3E0nPe3YYTnRuzyWwupE7WZMvW4PsMujPlR5qQDuFzE7azECBWb7skBTuw9g0OQkHwnR_3Z4z1OnXhJe3-B2J8ezTi8U9qWi_D8nyz2TbNGyuApv4Teryey2wR4etjfpEnTucq5eN5igVHrAT6_M-uYQR4z9BYEWHrl1IRgyxdLtdOPCtXpQSNAMHPUuolAOVNY766SPOEjivpyiE887i6yXsjxp0nICuFDYOhflAZ_W400F__0m00)
+![Class](https://www.plantuml.com/plantuml/svg/Z5HBQiCm4Dtx58DNwIU1Raq9WRIqXPQ4DXSGySG8R2benYcbz6HTz4YzGYLB_iKnpShMp9ltten7_lt-MH0BmsMHHomvHrZcWWZkfCYCA62d3JmAbUPIPR0skjWpR8nGP1E5OAaLHT6sAl7P1y7uBZxWCmAuChX5UK2VcUohHnA05maSj4mTZ52bFhZHwxpCf1h7beIlPOxtog9mKYU-6XDL-OjEBSPxuDhjc0l_qbAqz9uWHKPJsEFAf6XMkwFs0o7LH7GDnZBOSn_eQ6deru_K2KstMZ4gQ-sDZHstqywGbpxgMctZrCQFgaOKo4iqNfybyQrFpODG03gXuoorsPCC0z5XwrvVkn4cy6GjPsY2S3LN9zi9KntkLvmX53eDtw1oEGJLFLS5JSSZEAfn_t1spFNlGdmJmtHg7xFPPTnVqGJSyXFuiG9hc8yLnztDJC1U1BBWJgo3h3zw0its4bIZ1Bq3xc_mACkfuPxBsEioT3umrvIvYcXX9s7_Gty0003__mC0)
 
   
 
@@ -388,18 +446,27 @@ Prompt "1" -- "1" TransformationOrder: Has
 Description:
 *An Admin configures the Prompt Gateway with any number of Plugins. *
 
+
 ### *Actors:*
+
 - Admin
 
+
 ### *Pre-conditions:*
+
 - The Admin has access to the Prompt Gateway configuration.
 
+
 ### *Post-conditions:*
+
 - The Prompt Gateway is configured with the selected Plugins.
 
 
+
 ### *Flow:*
-- The Admin selects the Plugins to be used.- The Admin configures the Prompt Gateway with the selected Plugins.
+
+- The Admin selects the Plugins to be used.
+- The Admin configures the Prompt Gateway with the selected Plugins.
 
 
 
@@ -411,15 +478,19 @@ title Configuring the Prompt Gateway Robustness Diagram
 
 actor "Admin" as A <<actor>>
 boundary "Prompt Gateway Configuration Interface" as B <<boundary>>
-control "Prompt Gateway Configuration" as C <<control>>
+control "Prompt Gateway" as C <<control>>
+entity "Plugin Modules" as D <<entity>>
+entity "Configuration Settings" as E <<entity>>
 
-A -> B : Selects Plugins
-B -> C : Configures Prompt Gateway with selected Plugins
+A -> B : Selects the Plugins to be used
+B -> C : Delegates the selection of Plugins
+C -> D : Retrieves the selected Plugins
+C -> E : Updates the Configuration Settings with the selected Plugins
 @enduml
 ```
 
 
-![Robustness](https://www.plantuml.com/plantuml/dsvg/V91D2i9034RtSuhGlHUGKleZYBkY9uXjMWUc6PbaA9xDXKVo2ex5kd3XDb_U2_cUzqSfYa7Zv8nQTGIDvy6ECLWUGIy4RV3JLM6FIZFUuEZFKPH917OMnu2JCTYf3v1L_MGv0nIe8C-NOL6Oiu_SOxX1zcDQ3w5Qpt1WfJ1WHukWJe8LJ8xEimRl_YiMi4dWPpjnfe9DaMHRE96ZJWLQ5qVBOkftqAHWLP3yVZfRlO0i7FLVi2JkKral0000__y30000)
+![Robustness](https://www.plantuml.com/plantuml/svg/RD5HQiCm30RWTvz2v7qN62KqJShOGs5qx01EhAG6nogslDApxM57sXMcECjeIj-C_UcNRFzyVMyZwy1fT8ejEuIQV6-75AmVW4y8Ru76CyEBPhpeAnofJP4znWYDrKFGerAwOmfGL6QqlW0TeOBD9c-MfMefUQF35OgxfAMHPaiUNZrZw7M7EM0d0KkXP7JaEP2xZyYq5lftBXAzt6BgvT9WFHp898SnmqRWV7pZraEy8xFSU_RxMwygU2fbh6Sn3ZkEyzlaBh8cQ15IHADsawl5DU86cNEMCLTDFQXVobGzsKRi4JbO_5nPD6kt5_TnDl-9ZoU7Y-NJuvGjUYFV_0i00F__0m00)
 
   
 
@@ -433,22 +504,33 @@ B -> C : Configures Prompt Gateway with selected Plugins
 title Configuring the Prompt Gateway Sequence Diagram
 
 actor "Admin" as A
-entity "Prompt Gateway Configuration Interface" as B
-control "Prompt Gateway Configuration" as C
+boundary "Prompt Gateway Configuration Interface" as B
+control "Prompt Gateway" as C
+entity "Plugin Modules" as D
+entity "Configuration Settings" as E
 
-A -> B : Selects Plugins
+A -> B : Selects the Plugins to be used
 activate B
-B -> C : Configures Prompt Gateway with selected Plugins
+B -> C : Delegates the selection of Plugins
 activate C
-C --> B : Configuration Successful
+C -> D : Retrieves the selected Plugins
+activate D
+D --> C : Returns selected Plugins
+deactivate D
+C -> E : Updates the Configuration Settings with the selected Plugins
+activate E
+E --> C : Confirms update
+deactivate E
+C --> B : Confirms Configuration
 deactivate C
-B --> A : Configuration Successful
+B --> A : Confirms Configuration
 deactivate B
+
 @enduml
 ```
 
 
-![Sequence](https://www.plantuml.com/plantuml/dsvg/Z91DQWCn34RtEeMOVIwGHSdOWT9T82SG7ir4u95RMsx8sRheaNg5EaC3-O7G_NjFd_tpzRqfHjdg7C748gDFEifKi-Y4Tc3SvJI_6xwIyP5EkEUFoXeOjq9JfXc0WgMCNJ_CeXrImHvOM-k4tPrxIPD9KdnJupnIu4Lo499QJl6vjR0UeCVL2pfSjpsHWnNSnJg9blCQ-Mnc2xepunjpAN2vVyrHx81bIV3msF3WSVLtw7RyleR0fOmrmi1Nl5lu_f-yWmthqFx-5m00__y30000)
+![Sequence](https://www.plantuml.com/plantuml/svg/Z99DRW8n38NtFeN5dWjqKJ5_ghgeX8fwW30nGwIPX2OEYBDrqIFr2dK2J0UerEwY-7tlFKVv-lXS15QUuz036-u9AsStfelUs0vvIxZqRjWnFYccWphYYjuZsPQmDghpQW1GBJkFiq8FnivG1InWxQBLoXznTaDVp1KRP_7PClcDQYbZ9RJEidVzBPMd5P2LWicoZvsn-E9qx2daOJqEhmDMn2nxd4GDG87pHopnGGOzjHnE2sO_EJjS4yP0EgrazX8kdSg4L8BKWdHoTu92DaWPRdDn-C4gg19M2_PAx0tjhp3IzqWDDSxFKS94Butkr9ec-XpHYFnjfyTUl--F1yFRFmeqq8m5ieiV0iPiFSrjKkxv5KVPLUfKNQNt4tNnBtK9i22hvIz-0m00__y30000)
 
   
 
@@ -464,9 +546,11 @@ title Configuring the Prompt Gateway Activity Diagram
 start
 :Admin logs in;
 
-if (Admin has access to the Prompt Gateway configuration) then (yes)
+if (Admin has access to the Prompt Gateway configuration?) then (yes)
   :Admin selects the Plugins to be used;
   :Admin configures the Prompt Gateway with the selected Plugins;
+  :Prompt Gateway retrieves the selected Plugins;
+  :Prompt Gateway updates the Configuration Settings with the selected Plugins;
   stop
 else (no)
   :Access denied;
@@ -477,7 +561,7 @@ endif
 ```
 
 
-![Activity](https://www.plantuml.com/plantuml/dsvg/R90n3i8m34Ltdy9ZUmMwK874oXL2ugQMKWVLBbNFni2Hk0BGW5WwMVhwVi_oy_xOgxdHfY61iIN2GvQEupIoHBIUy3pcuMfuSaQpMx3rnZUs1O_iukW6W7KVTcqOM33bgCZI0727LSbwf-Yy9rMqlCNqNwKppb9_6eBLGbe3ufUhbCYRbkqqHPOLTY6Sb4BpB_vOf5kccQrVyyAZy8Dz26hv2fIKi99StENgGC95KYeIk0FOl-VxRIy0003__mC0)
+![Activity](https://www.plantuml.com/plantuml/svg/Z951QWCn34NtEeMMaoiqYoQaq6sX9t1iZKVWaGTBJfYpTT4ZzGgTZYUqb52waX3_F_dB7s_l1pLNh8u9Z2qHdhBq76jXYMW3uKl9usJux8okRiQZDxwmpVZ4BXOt0gn-U3Y6aGLJZeeiUm3kiMkpmIawxqaLBTzZ-csbCyxokFkI27OpwGuGDx1I8c_QxAb6bfLs9gnAOVyjlC58xwswiWthlF4et60huPUua1McoqRwZwDEOUcQ_lGp5RwIsN9I_Vi5Qda2IahOIMxfs-422RUOJIA1Uu33KfUV-mG00F__0m00)
 
   
 
@@ -490,28 +574,24 @@ endif
 @startuml
 title State Diagram for Configuring the Prompt Gateway
 
-[*] --> NotConfigured : Admin has access to configuration
-NotConfigured --> PluginsSelected : Admin selects Plugins
-PluginsSelected --> Configured : Admin configures Prompt Gateway
-Configured --> [*] : Prompt Gateway is configured
-
-state NotConfigured {
-  [*] --> [Admin has access to configuration] Idle
+[*] --> PluginSelection
+state PluginSelection {
+  [*] --> NotSelected : [Admin has not selected any Plugins]
+  NotSelected --> Selected : Admin selects Plugins
+  Selected --> NotSelected : Admin deselects Plugins
+  Selected --> PluginConfiguration : Admin confirms selection
 }
-
-state PluginsSelected {
-  [*] --> [Admin selects Plugins] Idle
+state PluginConfiguration {
+  [*] --> NotConfigured : [Prompt Gateway is not configured with selected Plugins]
+  NotConfigured --> Configured : Admin configures Prompt Gateway with selected Plugins
+  Configured --> NotConfigured : Admin removes selected Plugins from configuration
+  Configured --> [*] : Admin confirms configuration
 }
-
-state Configured {
-  [*] --> [Prompt Gateway is configured] Idle
-}
-
 @enduml
 ```
 
 
-![State](https://www.plantuml.com/plantuml/dsvg/X95DYW8n48NtTOgt7l02BWP5GTmCWajn4Jfb6qWdGweQ4V5aBZoILz0MWnhysIQllbTVSZeS1w8cQTjuKgUUCLUZZB4pTJ8DLZ5X5CFArMroeOQk6RCKct_5v9BRc2tHucU9NkyNVr5pb2tw6Dh61QoDm5GLYq0Zgbl0g8k1dYSwniotjGioPy-LFb3aUY3vdifSD_kYFDUnb5iNlPr3lyZ0oHrWYUJwCiyxxmZ8_eklmajChMVQPrPfyO9MY9U4TwjyChap1XpivUVF0000__y30000)
+![State](https://www.plantuml.com/plantuml/svg/X991QiCm44NtEiLV5tA1BafA2zsLG9OX2s6FRO4b5MdS44fEraMFr2jKigB6aWlTpinxe_dsz-VNrhDqFEbHiEAHi6V9X6SbUoSrEklmP4sd-iafquC7mivP_SPu2NCdUHRYS7V4PlE0tJZroknff8QLDSBFfggA3m5aujLoQb2BUnmUMwqC1kbXBCFdZZJdgyKV0xo4ecHXI884-im4f9WlboQafN-WLCv9oFcI33UnwhI_BewdNuhZIwmA83TJ16MsK2cAvZPpKZpSeYbZMQYYl30ldXfBllgAVtk3jdBM3qvQHzg-ar_nwCAItwNp-Mjbp68LPSbSn9PC6_xH7m000F__0m00)
 
   
 
@@ -522,36 +602,31 @@ state Configured {
 
 ```plantuml
 @startuml
-title Configuring the Prompt Gateway Class Diagram
+title Class Diagram for Configuring the Prompt Gateway
 
 class Admin {
-  +selectPlugins(): void
-  +configurePromptGateway(): void
 }
 
 class Plugin {
-  +transformPrompt(): void
+  +selectPlugin()
 }
 
 class PromptGateway {
-  +receivePrompt(): void
-  +sendPrompt(): void
-  +accessPlugin(): void
+  +configure(Plugin)
 }
 
-class PromptGatewayConfigurationInterface {
-  +selectPlugins(): void
-  +configurePromptGateway(): void
+class ConfigurationSettings {
+  +updateSettings(Plugin)
 }
 
-Admin -- PromptGatewayConfigurationInterface : uses >
-PromptGatewayConfigurationInterface -- PromptGateway : configures >
-PromptGateway -- Plugin : uses >
+Admin -- PromptGateway : Configures >
+PromptGateway -- Plugin : Uses >
+PromptGateway -- ConfigurationSettings : Updates >
 @enduml
 ```
 
 
-![Class](https://www.plantuml.com/plantuml/dsvg/f99D2W8n38NtFKMMYdW15w8eY3kl43gPCT0VQJAAY2TpuP6yWkDK1r51mMNRzxwNF7evdIUYcBJspYYh8vZ5K79L9muLw9fWbQBVA2nGQOTxc3aKWJbZbT0ROzlZjF0Su6001aAEhAvSNN6GNdy4syZ5xS7UkPI1TrwdE3vOsPfXcZ186PFFdW_YPrRs9BB4Mtfnj9E5ulqMhIMH7Fg5_sW6bMDO1gLKegM_ryxb3OS_XOsW5X8Ocr_4hyp6tOtpncZLkVikPD9KrloCAm000F__0m00)
+![Class](https://www.plantuml.com/plantuml/svg/R91D2i8m48NtESKiAz8BT26L2cuBuW52Eus1_9HaWeXuCXSUoIlO9grKwVRbUsy-ydw-Ia_SKT2AaII5K2dkFHma5uvhwAo3offEYk2a4K0NXDfPtHCSEU6LtnXhOcFVQcdWpXvpKAiWOWAmzQYmePHacmKJfwQbX3RJDSmIlg1d4KxIcXCI3KO-jKBV3YDpjgmchpp_krLyrz33Zlq-ZdIoB-3iru5rcO6F9cEbHDCE__e1003__mC0)
 
   
 
@@ -559,18 +634,27 @@ PromptGateway -- Plugin : uses >
 Description:
 *The Prompt Gateway accesses the Transformation Plugins via their respective RESTful endpoint URLs. *
 
+
 ### *Actors:*
+
 - Prompt Gateway
 
+
 ### *Pre-conditions:*
+
 - The Prompt Gateway is configured with the Plugins.
 
+
 ### *Post-conditions:*
+
 - The Prompt Gateway has accessed the Transformation Plugins.
 
 
+
 ### *Flow:*
-- The Prompt Gateway sends a request to the Plugin's RESTful endpoint URL.- The Plugin receives the request and establishes a connection with the Prompt Gateway.
+
+- The Prompt Gateway sends a request to the Plugin's RESTful endpoint URL.
+- The Plugin receives the request and establishes a connection with the Prompt Gateway.
 
 
 
@@ -581,16 +665,18 @@ Description:
 title Accessing Transformation Plugins Robustness Diagram
 
 actor "Prompt Gateway" as A <<actor>>
-boundary "Plugin RESTful endpoints" as B <<boundary>>
-control "Plugin Connection Manager" as C <<control>>
+boundary "RESTful endpoint URLs of Transformation Plugins" as B <<boundary>>
+control "Prompt Gateway" as C <<control>>
+entity "Plugin Modules" as D <<entity>>
 
 A -> B : Sends a request to the Plugin's RESTful endpoint URL
-B -> C : Receives the request and establishes a connection with the Prompt Gateway
+B -> C : Receives the request and establishes a connection
+C -> D : Accesses the Transformation Plugins
 @enduml
 ```
 
 
-![Robustness](https://www.plantuml.com/plantuml/dsvg/P911JiD034NtSmgh6rPS05LHqu3OW5IbvG3En4r6cdZAsA7gsLXm9Aw0ExGWn6eMyz_pjp_VFrQYc7MUejEWaQ3sdaG23x3BoB9FUK8DYM4Jvo6mG9kwMPGj1FS1XuoJS-WrPLXiSfeE2e-eTCJJ0b2WXkMo_5QLwzBCFUQJ1OiBseVjRZz78EuFAR1AGTQ6NAD6-SIQK_o1ciHClbHwHiQ1Sg4QeovHWrmDjvMPxc1hSW64JAypYO8cq94kszp8lmxmqZwvzPbkZ6x9KtWZASnLWTo3lTZ582ETvVwtqp7e-3tXpp7SoWRObRy0003__mC0)
+![Robustness](https://www.plantuml.com/plantuml/svg/T94zRiCm38LtdOBmqgaNA08ZZbrqQO70IGz0sxGZG9PIaMgHitNeaNg5qZ_Pt4a3t_lU8_Nx_RDdmIXfT4QiE8AYROdP-W7E4Jtt8OueDdWukZHOpr279h5u5K5bSOWu6eEjX0ZPCORnAl22Gbzuom0P2jZjvccUcoOats6yGLO_dyvzSa2-kmRh1TxhLuRG_vCvamvAkXCKrWOlCRZDq5AbwroLv7Kp3LrWy1Qwv6XXLYfSngep1Jpc6lC49-t5W13f8n4BI02vqDhcGK-mKTyS9dUfxffQif_4i-UEGD-1ljWuonUQu5hGKpkjQSh9MgbrEVvgtRw5sMkgVjSV0000__y30000)
 
   
 
@@ -604,14 +690,19 @@ B -> C : Receives the request and establishes a connection with the Prompt Gatew
 title Accessing Transformation Plugins Sequence Diagram
 
 actor "Prompt Gateway" as A
-boundary "Plugin RESTful endpoints" as B
-control "Plugin Connection Manager" as C
+boundary "RESTful endpoint URLs of Transformation Plugins" as B
+control "Prompt Gateway" as C
+entity "Plugin Modules" as D
 
 A -> B : Sends a request to the Plugin's RESTful endpoint URL
 activate B
-B -> C : Receives the request
+B -> C : Receives the request and establishes a connection
 activate C
-C --> B : Establishes a connection with the Prompt Gateway
+C -> D : Accesses the Transformation Plugins
+activate D
+D --> C : Connection established
+deactivate D
+C --> B : Connection established
 deactivate C
 B --> A : Connection established
 deactivate B
@@ -620,7 +711,7 @@ deactivate B
 ```
 
 
-![Sequence](https://www.plantuml.com/plantuml/dsvg/P951Ri8m44NtFiM8JLTSe8kA94NTj18Az023CoIMd37rJ42SZGL7wXNgk16awjf_td-U-RxULg8OTUYzKQUUeB2MH1oti8l8SWYnHtM1OUE7rh70bhu6Oalmwh2Ds1k3LaE4nIQ6_gZmXafdl2m01Ggp3mCt62_fESz3lTxk3eC7ukOO7AlaO6biO8t1ttDLO2QRcp-GiQMOWvKn1InVe8JdPCAD048SZKH10sX7a-YJ_Ak2p_fzb7Mdf9Wgon5K9L1Dbjo998zFj4UmCXKifyfrsjRUE-beBBOFnxFJxhVzpnPCGpDEcJb5uin-HtTaCq-NngoIU3hC3m000F__0m00)
+![Sequence](https://www.plantuml.com/plantuml/svg/Z98nRW8n44NxESM89XKNI16nwutI10a1ES1W3s39EoRsB15dIv4ZvGgnWGGA8b6v-V_z_qV-_loQPAMaGnz0lGR6nbhEsSi6buaahsFgINqKd8LXuoNZWjy75ilOUTeawW78QamucgNOxnHVIFc33YEaZ0siuY2EqW57y-V5SZq4P76xw4NnRVwQCQx_oJdwMx1HDCLmasw0fPGkx9C7fz4DWK_M3g31yHEs-5WgYyj8c6hrhAWHTSldf8UCjwhLLNvVqag9je9C0StPijzpFjf_QIGEoqkhuFEMQqufBMphcWl5WAcKhb1E9pvJRg-_-3heS7oEDt_Sgq07Zg_KvgXkxrARkgoecxlKBS2aNAXybHy0003__mC0)
 
   
 
@@ -634,17 +725,15 @@ deactivate B
 title Accessing Transformation Plugins Activity Diagram
 
 start
-:Prompt Gateway is configured with the Plugins;
 :Prompt Gateway sends a request to the Plugin's RESTful endpoint URL;
-:Plugin receives the request;
-:Plugin establishes a connection with the Prompt Gateway;
+:Plugin receives the request and establishes a connection with the Prompt Gateway;
 stop
 
 @enduml
 ```
 
 
-![Activity](https://www.plantuml.com/plantuml/dsvg/P50x3i8m3Drp2c_SWIuWWLWOK2a7CC5jBQL9YPqYpiR0aRW2eG8Ln6Yzln-t-q8KewRE6MLr14jhIOHz0rL4BtM87Ie73pkN6lQI2Se3wnLMZ4t4pfZHmSntCNIzmWQLBdW55h31rzoaI2UuiBQWBNriYZ--a3y984Gw9n853L_ycK2vtbTrSf1fVM2lS2YtBvSHpofBF92CchV5XEO3ZuwbfLT2hkN9ZgEcMZzbYhmfzCOiSbX-pHC00F__0m00)
+![Activity](https://www.plantuml.com/plantuml/svg/L8yn3i9030JxUuKx_a0Qa40q52Y41vZ3IInTVE7i9E9j53o9Bt04AAXSU7Tsztb_hDGmsT05Pso1OEqzgR8qK2KKhMFgq3WA7CBGi6WM68ziDzWmDWaxvsQ2MnvIx7g37HfDU0CbkIWW9BeEf0OMmLhwOXOAvVPOrKE0BEiZYy6ft1UPCl-ponEFfBFdXq2vGBvu3gmjlU4-Yf2V-qrixIVXhqUHwyNUkLNEoIjV0000__y30000)
 
   
 
@@ -657,20 +746,20 @@ stop
 @startuml
 title Accessing Transformation Plugins State Diagram
 
-state "Prompt Gateway Configured" as PGConfigured
-state "Request Sent to Plugin" as RequestSent
-state "Connection Established with Plugin" as ConnectionEstablished
+state "Prompt Gateway Configured" as PGC
+state "Request Sent to Plugin's RESTful endpoint URL" as RS
+state "Connection Established with Plugin" as CE
+state "Accessed Transformation Plugins" as ATP
 
-[*] --> PGConfigured
-PGConfigured --> RequestSent : Sends a request to the Plugin's RESTful endpoint URL
-RequestSent --> ConnectionEstablished : Plugin receives the request and establishes a connection
-ConnectionEstablished --> [*]
+PGC --> RS : Sends a request
+RS --> CE : Receives the request
+CE --> ATP : Accesses the Transformation Plugins
 
 @enduml
 ```
 
 
-![State](https://www.plantuml.com/plantuml/dsvg/R971JiCm38RlUGfh5oIalG27QGYcNJXKwtP274Bhjf7IPCJE9fwD0u_4A-24TWlIZhP_V_wY_7nzhubru3XQnOOjmcFJ895nFUo3TjJvC6esta5bOsySGSsQ4PwDxeCUbQ9SBghWnoF3Legp_eGdxphJnu3j0ZH1jRqsveqTVaGaXXeT0_k9d-FJA4tcjEmxRBB8Hbhlrj20BPmD3-NcDLQab7gzVuFbSlNVeopoj3WB3ych9T0G9azHv06dOtSYkQdtNRGWiQCtidBOlQWIaP0tVGJ-Hn5sW-Q4bCdp8UrQm4iwAJGNYheDJAVaZKgjnKR-yXS00F__0m00)
+![State](https://www.plantuml.com/plantuml/svg/R50xRiCm3Drr2Y9BfroWGv70DR9qC6Jt0AfDsmHiAH6f1ZrRXnwfLoWjsvqoakzB_dx_d5XSb3HFHaWcX7FR8ZFv0PheFFSXpaueUAYcD91dgCK9mYkv8RhP6CxZeOfXlWfSTBYxBoY2xsb84Ri3E8RgKkn4YxU4B52Z5v2msJunsB9k-ZG1-kuQIC5t-vR5jjwrwkgnpMrANNrCn2DsS2SPDvyiACfTi1wZbCUtPFQvgOpHWd0ylcWMF2_LEWO7SQrgTBbWHQcOnHRf4nban7-28Wj1dPInPQwCnxd6d3H2V_u7003__mC0)
 
   
 
@@ -681,12 +770,12 @@ ConnectionEstablished --> [*]
 
 ```plantuml
 @startuml
-title Class Diagram for Accessing Transformation Plugins
+title Accessing Transformation Plugins Class Diagram
 
 class PromptGateway {
-  -plugins: Plugin[]
+  -configuredPlugins: Plugin[]
   +sendRequest(plugin: Plugin): void
-  +receiveResponse(plugin: Plugin): void
+  +establishConnection(plugin: Plugin): void
 }
 
 class Plugin {
@@ -695,18 +784,14 @@ class Plugin {
   +establishConnection(): void
 }
 
-class PluginConnectionManager {
-  -plugin: Plugin
-  +manageConnection(): void
+class RESTfulEndpointURL {
+  -url: String
 }
 
-PromptGateway "1" -- "0..*" Plugin : sends request >
-Plugin "1" -- "1" PluginConnectionManager : establishes connection >
+PromptGateway "1" -- "0..*" Plugin : accesses
+Plugin "1" -- "1" RESTfulEndpointURL : has
 @enduml
 ```
 
 
-![Class](https://www.plantuml.com/plantuml/dsvg/T56zJiCm4Dxz52TF1PIAhXvGKP5OGAe2J8ZXS8zWARQ3pob2Y2TZu95u1Pou2QtKZBxly_Tpz_lzi-I88RQs5j74cc1L8pDS6Qm2MdZn0Iwr9cRZAhWFw3YDB4RZ7QphjZAEXT3zdtNmjedN6EaTF-1J01HDPgWTzV4f3S-OtAQajvOupZ9Xm4yKRBtPTAH0cioMIkB6EwO9ujVetO-pQP9ll77neRnHS1T3IdwWc9ttlD8Jdsl3holl7Eckssp2uPznYmuh2lizXtITfktXuuA7Yv8B2KK1ydm-FvL34GNTbXX2JWiNOWSCx8MSJAHWB4GCUiIJo3A9fbF_0G00__y30000)
-
-  
-
+![Class](https://www.plantuml.com/plantuml/svg/X96_JiCm4CPtFyKf4t-K2jPCHQLYOQZICY66mxcabXmx-Cv52F5a33mIhu2J9aM88YRBzts-ttVdp_UFEGi6YQrLOiGIN6bDpCOri0dekFQXHJ7UmSh6nZY6XKLck3RO16oLqiDr5NpRoGqAFUCBl2g0N7jNcoO6giQNnTZY_Y79vqokAkaf4ij9DzGd_RI0dJTLRqeYFbh3suLtZdIVum_pso79KDv7I8ZE6oTtvMq1Qmbfghvh84rcHnFz7zulGhbSR-febz_DzxGOx86Ip3zNabrcaEUGNSncPzaKiW0SjasinifaIySHJ05RP3LFOwN_-W800F__0m00)
