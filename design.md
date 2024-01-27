@@ -290,27 +290,32 @@ classDiagram
 ```
 
 3. `PostgresMemoryStore` Class and Related Interfaces:
-```mermaid
-classDiagram
-    class MemoryBuilder {
-        +WithMemoryStore(Func~MemoryStore~)
-    }
-    class PostgresMemoryStore {
-        -string connectionString
-        -int vectorSize
-        -string schema
-        +PostgresMemoryStore(string, int, string)
-        +PostgresMemoryStore(NpgsqlDataSource, int, string)
-        +PostgresMemoryStore(IPostgresDbClient)
-    }
-    class NpgsqlDataSource {
-    }
-    interface IPostgresDbClient {
-    }
-    MemoryBuilder <-- PostgresMemoryBuilderExtensions : extends with
-    PostgresMemoryStore <-- PostgresMemoryBuilderExtensions : creates instances
-    NpgsqlDataSource <-- PostgresMemoryBuilderExtensions : uses
-    IPostgresDbClient <-- PostgresMemoryBuilderExtensions : uses
+```plantuml
+@startuml
+class MemoryBuilder {
+    +WithMemoryStore(Func~MemoryStore~)
+}
+
+class PostgresMemoryStore {
+    -string connectionString
+    -int vectorSize
+    -string schema
+    +PostgresMemoryStore(string, int, string)
+    +PostgresMemoryStore(NpgsqlDataSource, int, string)
+    +PostgresMemoryStore(IPostgresDbClient)
+}
+
+class NpgsqlDataSource {
+}
+
+interface IPostgresDbClient {
+}
+
+MemoryBuilder <.. PostgresMemoryBuilderExtensions : extends with
+PostgresMemoryStore <.. PostgresMemoryBuilderExtensions : creates instances
+NpgsqlDataSource <.. PostgresMemoryBuilderExtensions : uses
+IPostgresDbClient <.. PostgresMemoryBuilderExtensions : uses
+@enduml
 ```
 
 4. `PostgresMemoryEntry` Struct:
