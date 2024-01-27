@@ -42,44 +42,55 @@
 ## 4. Introduction
 
 ### Purpose of the Document
-The purpose of this document is to provide a comprehensive overview and serve as a reference guide for various components designed to interact with PostgreSQL databases within the context of semantic memory systems and machine learning tasks. It details the structure and functionalities of the .NET Standard library project, the `IPostgresDbClient` interface, the `PostgresDbClient` class, the `PostgresMemoryBuilderExtensions` class, the `PostgresMemoryEntry` struct, and the `PostgresMemoryStore` class. The document also includes guidance on the use of the `pgvector` extension for vector similarity search within Postgres databases, installation procedures, quick start instructions, indexing, and migration strategies from older versions.
+The purpose of this document is to provide a comprehensive overview of various components designed for interacting with PostgreSQL databases within the context of semantic memory systems and vector similarity searches. These components include the .NET Standard library project for a Postgres connector, the `IPostgresDbClient` interface, the `PostgresDbClient` class, the `PostgresMemoryBuilderExtensions` class, the `PostgresMemoryEntry` struct, and the `PostgresMemoryStore` class. The document serves as a technical guide for developers to understand the functionalities, configurations, and integration processes of these components, as well as the usage of the pgvector extension in Postgres.
 
 ### Scope of the Document
-The scope of this document encompasses a detailed explanation of the project file's primary functionalities, assembly and namespace settings, importing shared properties, NuGet package settings, package references, and project references. It covers the primary functionalities of the `IPostgresDbClient` interface, including table management, data management, and querying for nearest matches based on vector similarity. Additionally, it provides method documentation for each operation, a UML sequence diagram for the `UpsertAsync` method, and emphasizes the importance of maintaining consistent formatting and coding style. The document also describes the functionalities of the `PostgresDbClient` class, including table management, data operations, and vector-based similarity search, along with method descriptions, usage examples, and UML diagrams. Furthermore, it details the functionalities of the `PostgresMemoryBuilderExtensions` class, including the registration of a Postgres memory store using different methods, code snippets, and UML sequence diagrams. The document outlines the primary functionalities, properties, and the UML class diagram of the `PostgresMemoryEntry` struct, summarizing its utility in storing and retrieving memory entries. Lastly, it includes instructions on how to install and use the `pgvector` extension with Postgres, setup using Docker, creating a database, enabling the extension, and using Postgres as a semantic memory store, as well as creating an index for the `pgvector` extension to improve search performance and providing a migration script for updating to the new structure of the Postgres Memory connector.
+This document covers the XML configuration file of the .NET Standard library project, the primary functionalities of the `IPostgresDbClient` interface, the detailed functionalities provided by the `PostgresDbClient` class, the extension methods of the `PostgresMemoryBuilderExtensions` class, the structure and functionalities of the `PostgresMemoryEntry` struct, and the description of the `PostgresMemoryStore` class. It also includes UML diagrams that illustrate the structure and behavior of these components, as well as the sequence of operations for specific methods.
 
 ### Definitions, Acronyms, and Abbreviations
-- API: Application Programming Interface
-- CRUD: Create, Read, Update, Delete
-- CancellationToken: A construct used to signal cancellation in asynchronous operations
-- DateTime: A data type representing date and time
-- DateTimeKind.Utc: A constant that denotes the time is stored in Coordinated Universal Time format
-- Docker: A platform for developing, shipping, and running applications in containers
-- Embedding: A nullable `Vector` property used to store the embedding vector for the memory entry
-- IMemoryStore: An interface that the `PostgresMemoryStore` class implements
-- IPostgresDbClient: An interface that defines a set of asynchronous operations for managing PostgreSQL databases
-- JSONB: JSON Binary, a data type in PostgreSQL for storing JSON data in a binary format
-- Key: A string property that uniquely identifies the memory entry
-- MemoryRecord: An object containing a key, metadata, and an optional embedding vector
-- MetadataString: A string property that contains attributes related to the memory entry
-- Mermaid: A syntax for generating diagrams and flowcharts from text in a similar manner as Markdown
-- NpgsqlDataSource: A class representing a data source for PostgreSQL in C#
-- NpgsqlDataSource: An object representing a data source for Postgres
-- NuGet: A package manager for .NET, which provides the central repository for package distribution
-- Postgres: Short for PostgreSQL, an open-source relational database management system
-- PostgresMemoryBuilderExtensions: A utility class providing methods to integrate a Postgres memory store into a `MemoryBuilder` configuration
-- PostgresMemoryEntry: A struct designed to represent a single entry in a PostgreSQL database for memory-related data storage
-- PostgresMemoryStore: The class that is the subject of the document
-- ReadOnlyMemory<float>: A data structure representing an embedding vector
-- SQL: Structured Query Language
-- Semantic Kernel: A framework or system designed to work with semantic memory and plugins
-- Semantic Memory: A type of memory store that is used for storing and retrieving knowledge about the world
-- Table Management: Operations that involve creating, checking the existence of, retrieving, and deleting database tables
-- Timestamp: A nullable `DateTime` property that records the creation or modification time of the entry
-- UML: Unified Modeling Language, a standardized modeling language used to specify, visualize, construct, and document the artifacts of software systems
-- Upsert: A combination of "update" and "insert", referring to the operation of either updating an existing entry or creating a new one if it does not exist
-- Vector: A mathematical representation, often used in the context of machine learning and search functionalities to represent data points in a multidimensional space
-- XML: Extensible Markup Language, used for defining the settings of the project
-- pgvector: An extension for Postgres, likely related to vector operations within the database
+- **Async/Await**: A programming pattern used in C# for non-blocking asynchronous operations.
+- **CRUD**: Create, Read, Update, Delete.
+- **CancellationToken**: A construct in .NET that allows cooperative cancellation of asynchronous operations.
+- **Docker**: A platform used to develop, ship, and run applications inside containers.
+- **IMemoryStore**: An interface that defines the contract for memory store implementations.
+- **IPostgresDbClient**: An interface defining a set of asynchronous operations for interacting with a PostgreSQL database.
+- **JSONB**: JSON Binary, a data type in PostgreSQL for storing JSON data in a binary format.
+- **MemoryBuilder**: A class within a framework designed to configure and manage memory stores.
+- **MemoryRecord**: A data structure containing a key, metadata, and an optional embedding vector.
+- **NpgsqlDataSource**: A class representing the data source object for PostgreSQL connectivity.
+- **NpgsqlDataSourceBuilder**: A class used to build data source configurations for Npgsql, a .NET data provider for PostgreSQL.
+- **NuGet**: A package manager for .NET, which allows developers to share reusable code.
+- **Postgres**: An open-source relational database management system (RDBMS).
+- **PostgresMemoryBuilderExtensions**: A utility class containing extension methods for the `MemoryBuilder` class to configure a Postgres memory store.
+- **PostgresMemoryEntry**: A data structure representing an entry in the PostgreSQL database, which may include a key, metadata, vector embedding, and timestamp.
+- **PostgresMemoryStore**: A class that serves as an implementation of the `IMemoryStore` interface for interacting with a PostgreSQL database.
+- **Semantic Kernel**: A framework or system designed to work with semantic data and memory systems.
+- **SQL**: Structured Query Language, a domain-specific language used in programming for managing data in a relational database management system.
+- **Struct**: A data structure that encapsulates multiple related variables.
+- **UML (Unified Modeling Language)**: A standardized modeling language in the field of software engineering.
+- **Upsert**: A database operation that updates an existing entry if the key exists or inserts a new entry if it does not.
+- **Vector**: A mathematical representation, possibly used for storing vector embeddings in the context of similarity searching.
+- **pgvector**: An extension for Postgres that supports vector data types and operations.
+
+***UML Diagramming Information:***
+The document includes UML class diagrams that provide a visual representation of the `PostgresDbClient` and `PostgresMemoryStore` classes, showing their methods and relationships with other components. Additionally, UML sequence diagrams illustrate the flow of operations for methods such as `UpsertAsync` in the `IPostgresDbClient` interface and `GetNearestMatchesAsync` in the `PostgresMemoryStore` class. These diagrams are essential for developers to understand the asynchronous nature of the operations and the interactions between the client, the interface, and the database.
+
+***Key Information to Emphasize:***
+- The `PostgresDbClient` class is tailored for operations with PostgreSQL tables that store vector embeddings and provides asynchronous methods for CRUD operations and vector-based similarity searches.
+- The `PostgresMemoryBuilderExtensions` class offers extension methods for integrating a Postgres memory store into the `MemoryBuilder` configuration.
+- The `PostgresMemoryEntry` struct is a data structure designed for use with PostgreSQL databases in the context of semantic analysis or machine learning applications.
+- The `PostgresMemoryStore` class implements the `IMemoryStore` interface and utilizes the pgvector extension for vector similarity search within a PostgreSQL database.
+- The Microsoft.SemanticKernel.Connectors.Postgres connector utilizes Postgres and the pgvector extension to implement Semantic Memory for vector similarity search, with integration options for Azure services and Docker.
+
+***Practice Extraction for a small section:***
+To quickly start using the pgvector extension:
+- Install pgvector using Docker.
+- Create a database and enable the pgvector extension.
+- Set up Postgres as a semantic memory store with vector support.
+- Use `NpgsqlDataSourceBuilder` and `MemoryBuilder` for configuration.
+- Integrate `TextMemoryPlugin` for text memory operations.
+
+The integration of the provided knowledge pieces into this document has been conducted with a focus on clarity, structural integrity, and the avoidance of repetition, ensuring that all relevant information is included and easily accessible.
 
 
 ***
@@ -94,39 +105,29 @@ The scope of this document encompasses a detailed explanation of the project fil
 ## 5. Architectural Representation
 
 ### Overview of Architectural Style
-The architectural style of the Microsoft.SemanticKernel.Connectors.Postgres library is modular and interface-driven, designed to facilitate asynchronous operations and vector similarity searches within a PostgreSQL database. It leverages the pgvector extension for efficient nearest neighbor search, essential for semantic memory implementations. The style is indicative of a system that supports semantic analysis or machine learning tasks, with an object-oriented approach to structuring the code. The use of .NET Standard 2.0 ensures broad compatibility, and the library's integration with Semantic Kernel plugins and memory systems highlights its role in a larger, event-driven or reactive system architecture.
+The architectural style of the system is multifaceted, encompassing a modular and service-oriented approach for the `IPostgresDbClient` interface, an object-oriented design for the `PostgresDbClient` class, and a plugin-based system for integrating with PostgreSQL databases using the pgvector extension. The system is designed to support semantic memory storage and retrieval, focusing on vector similarity search capabilities, and is structured to provide broad compatibility and interoperability within the .NET ecosystem.
 
 ### Key Structural Elements
-The key structural elements of the Microsoft.SemanticKernel.Connectors.Postgres library include:
-- **Asynchronous Methods**: Non-blocking operations within interfaces like `IPostgresDbClient` for database interactions.
-- **CRUD Methods**: Asynchronous methods for creating, reading, updating, and deleting data entries within the `PostgresDbClient` class.
-- **Constructors**: Multiple constructors in the `PostgresMemoryStore` class for various initialization scenarios.
-- **Docker**: Utilized for the deployment of the PostgreSQL database with the pgvector extension.
-- **Extension Methods**: Such as those in `PostgresMemoryBuilderExtensions`, which add functionality to the `MemoryBuilder` class.
-- **MemoryBuilder Class**: Extended by `PostgresMemoryBuilderExtensions` to include Postgres memory store configuration.
-- **NpgsqlDataSource**: An object for database connectivity within the `PostgresDbClient` class.
-- **NpgsqlDataSourceBuilder**: A C# class used to configure and instantiate a data source for Postgres.
-- **Package References**: Dependencies on other NuGet packages like `Microsoft.Bcl.AsyncInterfaces` and `Pgvector`.
-- **Postgres Database**: The core component where data is stored and managed, with the pgvector extension for vector operations.
-- **PostgresMemoryEntry Struct**: Includes properties like Key, MetadataString, Embedding, and Timestamp for memory entries.
-- **PostgresMemoryStore Class**: Implements the `IMemoryStore` interface for managing memory records in a PostgreSQL database.
-- **Project References**: Dependencies on projects within the same solution, such as `SemanticKernel.Core`.
-- **Schema Name**: Defines the namespace within the database for the `PostgresDbClient` class.
-- **Shared Properties**: Imported from external files to maintain consistency across projects.
-- **TextMemoryPlugin**: A plugin that integrates the memory store with the kernel for text embedding generation.
-- **Vector-Based Similarity Search**: A method within the `PostgresDbClient` class for retrieving nearest matches to a given vector.
+The key structural elements across the system include interfaces such as `IPostgresDbClient`, classes like `PostgresDbClient` and `PostgresMemoryStore`, structs such as `PostgresMemoryEntry`, and extension methods for the `MemoryBuilder` class. These elements encapsulate data and behavior related to PostgreSQL database interactions, vector-based data management, and memory store configuration. The system also utilizes NuGet packages, project references, and shared properties to maintain consistency and streamline the build process.
 
 ### Context Diagram
-The context diagram for the Microsoft.SemanticKernel.Connectors.Postgres library would feature the following components:
-- **Azure Database for PostgreSQL - Flexible Server**: An optional cloud-based deployment for the Postgres database with pgvector.
-- **Azure Cosmos DB for PostgreSQL**: Another cloud-based deployment option for the Postgres database with pgvector.
-- **Client Application**: Interacts with the Semantic Kernel using the memory store for various operations.
-- **Docker Container**: Hosts the Postgres database with the pgvector extension.
-- **Postgres Database with pgvector**: Central to the storage system for semantic memory, interacting with the `PostgresMemoryStore` class.
-- **Semantic Kernel**: Utilizes the connector to implement semantic memory, interfacing with the `PostgresMemoryStore` and `IPostgresDbClient`.
-- **UML Diagrams**: Illustrate interactions between components such as the client, `MemoryBuilder`, `PostgresMemoryStore`, and PostgreSQL database.
+The context diagrams provided illustrate the relationships and dependencies of the system's components. For instance, the `PostgresDbClient` class interacts with an `NpgsqlDataSource` and provides CRUD operations and vector-based similarity search methods. The `MemoryBuilder` class is extended by `PostgresMemoryBuilderExtensions` to configure a `PostgresMemoryStore`. The `PostgresMemoryEntry` struct represents data within the system, and the plugin-based architecture integrates with the PostgreSQL database, enhanced by the pgvector extension, to support semantic memory operations.
 
-By integrating these elements, the architectural representation of the Microsoft.SemanticKernel.Connectors.Postgres library is established as a cohesive and scalable solution for semantic memory systems, with a clear emphasis on modularity and compatibility across various .NET implementations.
+#### UML Diagrams
+The UML diagrams included in the knowledge pieces visually represent the structure and behavior of the system's components. For example, the UML Class Diagram for the `PostgresDbClient` class shows its methods and dependencies, while the UML Sequence Diagrams illustrate interactions during operations like `UpsertAsync` and `GetNearestMatchesAsync`.
+
+#### Important Notes
+- The system targets .NET Standard 2.0 for broad compatibility.
+- The `pgvector` extension is an open-source vector similarity search engine used by the system.
+- The `MemoryBuilder` class uses a builder pattern to construct memory stores with PostgreSQL as the backend.
+
+#### Project Structures
+The project is structured with an `AssemblyName` of `Microsoft.SemanticKernel.Connectors.Postgres` and a `RootNamespace` aligned with the assembly name. It includes a `VersionSuffix` to indicate pre-release status and imports external configurations through shared properties.
+
+#### Examples
+An example of the system's modularity is the `IPostgresDbClient` interface, which defines a contract for PostgreSQL database operations, allowing for non-blocking, asynchronous operations. The `PostgresMemoryStore` class is another example, offering constructors for initializing database connections and methods for managing records and collections within the database.
+
+By integrating these components, the system achieves a cohesive architectural representation that supports scalability, performance, and extensibility in managing semantic memory within a .NET environment.
 
 
 ***
@@ -140,40 +141,41 @@ By integrating these elements, the architectural representation of the Microsoft
 ## 6. Goals and Constraints
 
 ### System Goals
-- Create a Postgres connector library that works with Semantic Kernel plugins and semantic memory systems, targeting .NET Standard 2.0 for broad compatibility.
-- Develop an interface (`IPostgresDbClient`) for managing PostgreSQL databases, enabling storage and retrieval of entries, including metadata and vector embeddings.
-- Support table management operations such as creation, existence checks, retrieval of all tables, and deletion, as well as data management tasks like upserting, reading, reading in batches, deleting, and batch deletions.
-- Facilitate interactions with a PostgreSQL database, providing asynchronous CRUD operations for tables storing data entries with vector embeddings, and enable specialized methods for vector-based similarity searches.
-- Implement Semantic Memory using Postgres, utilizing the [pgvector](https://github.com/pgvector/pgvector) extension for vector similarity search in Postgres, supporting exact and approximate nearest neighbor search, L2 distance, inner product, and cosine distance.
-- Ensure scalability and performance for applications requiring efficient data retrieval and manipulation based on vector similarity, including the ability to create indexes for approximate nearest neighbor search to improve performance with large datasets.
-- Provide a set of extension methods for the `MemoryBuilder` class to enable the configuration of a Postgres memory store, allowing easy integration and straightforward methods for registering a Postgres memory store.
-- Offer a structured representation of memory entries in a PostgreSQL database to support semantic analysis or machine learning tasks by storing essential data elements such as unique identifiers, metadata, embeddings, and timestamps.
-- Provide functionalities to create, manage, and query collections of memory records in a PostgreSQL database, enabling record management and support for similarity searches to retrieve records nearest to a given embedding vector.
+
+The primary system goals are to develop a .NET Standard library project that creates a Postgres connector, which is compatible with Semantic Kernel plugins and semantic memory systems. This connector aims to facilitate interactions with PostgreSQL databases, particularly for operations involving tables that store data entries with associated vector embeddings. It provides a comprehensive suite of asynchronous methods to perform Create, Read, Update, and Delete (CRUD) operations, as well as specialized vector-based similarity searches essential for applications dealing with vector embeddings.
+
+The system is designed to be integrated into the `MemoryBuilder` configuration, enabling the configuration of a Postgres memory store using various methods such as a connection string, an `NpgsqlDataSource` object, or an existing `IPostgresDbClient` instance. It also aims to provide a structured representation of memory entries for storage in a PostgreSQL database to support semantic analysis or machine learning tasks. Furthermore, the system is intended to manage and query memory records in a PostgreSQL database with vector support, enabling creation, management, and querying of collections of memory records, each consisting of a key, metadata, and an optional embedding vector.
+
+To achieve these goals, the system will support vector similarity search capabilities within Postgres, including exact and approximate nearest neighbor search, L2 distance, inner product, and cosine distance. It will offer compatibility with Azure Database for PostgreSQL - Flexible Server and Azure Cosmos DB for PostgreSQL, and facilitate the creation of indexes for improved performance in vector similarity searches. Additionally, the system will assist users in migrating from older versions of the Postgres Memory connector to the new implementation that uses separate tables for each Collection.
 
 ### Design Constraints
-#### Technological:
-- Ensure compatibility with .NET Standard 2.0, including package dependencies such as `Microsoft.Bcl.AsyncInterfaces` and `Pgvector`.
-- Design the system to handle asynchronous operations efficiently, as indicated by the asynchronous nature of the interface methods.
-- Implement the system in C#, tailored for operations involving tables with vector embeddings, and manage resources effectively, including the provision of a `Dispose` method for resource cleanup.
-- Require the installation of the pgvector extension on Postgres, ensuring compatibility with the Postgres version in use and designing the system to work with Docker for the installation of pgvector.
-- Maintain compatibility with the `MemoryBuilder` class and the Postgres database system, ensuring that the `PostgresMemoryEntry` struct is compatible with PostgreSQL databases and designed to handle specific data types.
 
-#### Business:
-- Maintain a consistent coding style and structure to ensure readability and maintainability, focusing on providing high-level API functionality.
-- Design the system to be flexible and support dependency injection for the database client, accommodating varying business use cases and ensuring easy integration into existing business infrastructures.
-- Cater to the needs of semantic analysis or machine learning applications, focusing on the efficient storage and retrieval of embeddings and metadata.
-- Assume the availability of resources to run Postgres with the necessary extensions and integrate with Azure Database for PostgreSQL and Azure Cosmos DB for PostgreSQL, which may involve additional costs or subscription models.
+The design constraints are categorized into technological, business, and regulatory constraints:
 
-#### Regulatory:
-- Comply with software licensing and any standards relevant to database connectors and .NET libraries, ensuring that interactions with the Postgres database comply with relevant data handling and privacy regulations.
-- Ensure that the timestamping uses `DateTimeKind.Utc` for universal format consistency across different server time zones and possibly for regulatory compliance.
-- Adhere to data protection and privacy laws affecting how the system manages and stores memory records, including table naming conventions as per the Postgres naming convention for database design.
+**Technological Constraints:**
+- The project must adhere to the .NET Standard 2.0 framework, which imposes limitations on the APIs that can be used.
+- The system is designed to work specifically with Postgres databases and the `pgvector` extension for vector operations.
+- The interface methods must be asynchronous to ensure non-blocking operations, crucial for I/O-bound work such as database querying.
+- The querying functionality must support a limit and a minimum relevance score to filter the nearest matches based on vector similarity.
+- The system must be compatible with the PostgreSQL database and the `pgvector` extension for vector operations.
+- Requires the installation of the pgvector extension on Postgres and must be compatible with specific versions of Postgres, Azure Database for PostgreSQL - Flexible Server, and Azure Cosmos DB for PostgreSQL.
 
-### Examples:
-- An example of a system goal is the creation of a `PostgresMemoryStore` class that enables efficient management of memory records, including batch operations and similarity searches, which is essential for applications like recommendation systems or data analysis tools.
-- A technological constraint example is the requirement for the `pgvector` extension, which necessitates specific PostgreSQL configurations and impacts the types of operations the system can perform, such as vector similarity searches.
-- A business constraint example is the design focus on high-level API functionality, which may limit direct SQL operation customization for end-users but streamlines the integration process for developers.
-- A regulatory constraint example is the adherence to data privacy regulations, which would influence the design of the system to include features like secure data handling and compliance with international data protection standards.
+**Business Constraints:**
+- The versioning strategy includes a version suffix (alpha), indicating that the project is in a pre-release state and may have constraints related to stability and feature completeness.
+- The system should be designed to efficiently handle the operations associated with memory records, including batch processing and similarity searches, to meet performance expectations.
+- The need to ensure that the migration script does not lead to data loss, especially when dropping existing tables.
+- The requirement to maintain the system's performance and recall when using approximate nearest neighbor search.
+
+**Regulatory Constraints:**
+- Any connector interacting with databases must comply with data protection and privacy regulations, which could influence design decisions.
+- If the system is used in environments subject to data protection regulations (such as GDPR or HIPAA), it must ensure compliance with such regulations, particularly in the management and deletion of entries.
+- The `Timestamp` property must record times in `DateTimeKind.Utc` to comply with universal time recording practices, which may be a regulatory requirement in some contexts to ensure consistency across different time zones.
+
+### UML Diagramming Information
+
+The UML diagrams provided offer a visual representation of the system's architecture and interactions. For instance, the UML sequence diagram for the `UpsertAsync` method illustrates the flow of operations within the database operation, where an entry is either updated or inserted based on its existence. The UML class diagram for the `PostgresMemoryEntry` struct visually represents the structure, showing properties such as `Key`, `MetadataString`, `Embedding`, and `Timestamp`. Additionally, the UML class diagram for the `PostgresMemoryStore` class details its methods and relationships, while the UML sequence diagram for `GetNearestMatchesAsync` method depicts the interaction between the caller, `PostgresMemoryStore`, and the `IPostgresDbClient`.
+
+These diagrams are essential for understanding the system's structure and behavior and should be included in the design document to provide clarity on the system's structure and behavior.
 
 
 ***
@@ -188,27 +190,33 @@ By integrating these elements, the architectural representation of the Microsoft
 ## 7. Use-Case View
 
 ### Use-Case Diagrams
-The source document does not contain traditional use-case diagrams. However, it provides a UML Class Diagram that outlines the structure of the `PostgresMemoryStore` class and its relationship with other components such as `IMemoryStore` and `IPostgresDbClient`. This diagram can be used to infer some use-case relationships, such as initialization, collection management, record management, similarity search, and resource cleanup.
+The use-case diagrams for the various components of the system provide a visual representation of the interactions between the actors and the system's functionalities. These diagrams include:
+
+- **Semantic Memory Store Initialization**: Illustrating the initialization process of the semantic memory store using the Postgres connector with the pgvector extension.
+- **Vector Similarity Search**: Showcasing the process of conducting exact and approximate nearest neighbor searches utilizing the pgvector extension.
+- **Index Creation for Performance**: Depicting the decision-making process for creating an index to enhance search performance based on the dataset size.
+
+Additionally, the UML Class Diagrams from the source documents should be included to visually represent the structure of classes like `PostgresDbClient` and `PostgresMemoryStore`. These diagrams display the private fields and public methods corresponding to the use cases described.
 
 ### Use-Case Descriptions
-The source document does not explicitly provide use-case descriptions. Nonetheless, based on the functionalities of the `PostgresMemoryEntry` struct and the `PostgresMemoryStore` class, we can infer potential use-cases:
-1. **Initialization**: There are three ways to initialize the `PostgresMemoryStore` class: using a connection string, an `NpgsqlDataSource` object, or an `IPostgresDbClient` object for dependency injection.
-2. **Collection Management**: The class provides methods to create, check the existence of, retrieve, and delete collections within the PostgreSQL database.
-3. **Record Management**: The class allows inserting or updating (upserting) individual records or batches of records, retrieving them, and deleting them from a collection.
-4. **Similarity Search**: The class can perform similarity searches to retrieve records nearest to a given embedding vector based on cosine similarity.
-5. **Storing Memory Entries**: Storing memory entries with unique identifiers, adding or updating metadata, storing and retrieving embedding vectors for machine learning models, and recording timestamps for creation or modification of memory entries.
+The use-case descriptions provide a detailed overview of the system's capabilities and the methods through which actors interact with the system. These descriptions include:
+
+- **Creating and Managing Tables**: Operations such as creating, checking the existence of, retrieving, and deleting tables in the PostgreSQL database.
+- **Data Operations**: Inserting or updating individual or batch entries, reading single or batch entries, and deleting entries from the database.
+- **Vector-Based Similarity Search**: Performing exact and approximate nearest neighbor searches to retrieve records based on embedding vectors.
+- **Semantic Memory Store Configuration**: Setting up a semantic memory store in Postgres using the pgvector extension, including configuring the data source and building the memory with appropriate plugins.
+- **Index Management**: Creating an index to switch from exact to approximate nearest neighbor search, considering the number of lists and probes to balance recall and performance.
 
 ### Actor Descriptions
-The source document does not explicitly provide actor descriptions. However, the actors involved in the inferred use-cases are:
-- **Caller**: The user or system that interacts with the `PostgresMemoryStore` class to perform operations such as managing collections, managing records, and conducting similarity searches.
-- **Client**: The user or system that initiates the registration of a Postgres memory store using the `MemoryBuilder` class.
-- **Machine Learning Models**: Systems that utilize the embedding vectors stored within the `PostgresMemoryEntry` for semantic analysis or other machine learning tasks.
-- **MemoryBuilder**: The class that is extended by the `PostgresMemoryBuilderExtensions` to incorporate a Postgres memory store into its configuration.
-- **PostgresMemoryStore**: The specific type of memory store that interacts with a Postgres database, which is instantiated and configured during the registration process.
-- **System Users**: Individuals or systems that interact with the PostgreSQL database to store or retrieve memory entries.
-- **IPostgresDbClient**: An actor that represents the database operations abstraction layer, which the `PostgresMemoryStore` uses to interact with the PostgreSQL database.
+The actors involved in the system's use cases are:
 
-By integrating the knowledge pieces provided, we have constructed a comprehensive Use-Case View section that aligns with the user's structure requirements. This section includes inferred use-case diagrams, descriptions, and actor descriptions based on the technical details of the source document.
+- **Client Application**: An external system or application that uses the `PostgresDbClient` to manage and query vector-based data in a PostgreSQL database.
+- **Consumer**: The end-user or system that utilizes the Postgres connector library in conjunction with Semantic Kernel plugins and semantic memory systems.
+- **Developer**: The individual or team responsible for setting up and maintaining the project file, ensuring that all configurations are correct and up-to-date. Developers also utilize the Postgres connector to implement semantic memory stores and perform vector similarity searches within applications.
+- **System Administrator**: A user who manages the database schema and tables, potentially using the `PostgresDbClient` for administrative tasks. Responsible for installing and configuring the pgvector extension on Postgres databases, including Docker setup and database initialization.
+- **Database Administrator (DBA)**: Manages the Postgres database, including the creation of indexes to optimize vector similarity search performance based on data size and search requirements.
+
+By integrating these use-case diagrams, descriptions, and actor definitions, the document provides a clear and comprehensive view of the system's functionality and the roles of various stakeholders in its operation.
 
 
 ***
@@ -224,358 +232,88 @@ By integrating the knowledge pieces provided, we have constructed a comprehensiv
 
 ### Primary Packages, Classes, and Interfaces
 
-- `IPostgresDbClient`: An interface responsible for managing PostgreSQL database operations, including storing and retrieving entries with metadata and vector embeddings.
-- `MemoryBuilder`: A class from a larger framework designed to configure and manage memory stores.
-- `NpgsqlDataSource`: An object used to configure the Postgres memory store.
-- `NpgsqlDataSourceBuilder`: A class used to build data source configurations for connecting to a Postgres database.
-- `PostgresDbClient`: A class designed to interact with a PostgreSQL database, implemented in C#, and initialized with a `NpgsqlDataSource` object, a schema name, and a vector size.
-- `PostgresMemoryBuilderExtensions`: A utility class providing extension methods for the `MemoryBuilder` class.
-- `PostgresMemoryEntry`: A struct designed to interact with a PostgreSQL database for storing memory-related data.
-- `PostgresMemoryStore`: A class representing the Postgres memory store and implementing the `IMemoryStore` interface, using the `IPostgresDbClient` object for database operations.
-- `TextMemoryPlugin`: A class representing a plugin for text memory operations.
+The logical view of the system encompasses several primary classes, interfaces, and utility classes that facilitate the interaction with PostgreSQL databases, particularly for operations involving vector embeddings and semantic analysis.
+
+- `IMemoryStore`: An interface that `PostgresMemoryStore` implements to interact with memory stores.
+- `IPostgresDbClient`: A central interface defining the contract for operations on PostgreSQL databases, including table management, data entries, and querying based on vector similarity.
+- `MemoryBuilder`: A class from a larger framework used to configure and manage memory stores.
+- `NpgsqlDataSource`: An object representing the data source for the Postgres database.
+- `NpgsqlDataSourceBuilder`: Responsible for building the data source configuration for connecting to the PostgreSQL database.
+- `PostgresDbClient`: A class that interacts with PostgreSQL databases, particularly for tables with vector embeddings.
+- `PostgresMemoryBuilderExtensions`: A utility class providing extension methods for the `MemoryBuilder` class to integrate Postgres memory stores.
+- `PostgresMemoryEntry`: A struct encapsulating key elements for storing and retrieving memory entries in a PostgreSQL database.
+- `PostgresMemoryStore`: A class representing the Postgres memory store that interacts with a Postgres database and implements the `IMemoryStore` interface.
+- `SemanticKernel.Core`: A project within the same solution that the Postgres connector library relies on for core functionalities.
+- `TextMemoryPlugin`: A plugin that interfaces with the semantic memory store.
 
 ### Class Diagrams
 
-- The `PostgresDbClient` class includes private fields such as `_dataSource`, `_vectorSize`, and `_schema`, and public methods like `DoesTableExistsAsync`, `CreateTableAsync`, `GetTablesAsync`, `DeleteTableAsync`, `UpsertAsync`, `GetNearestMatchesAsync`, `ReadAsync`, `ReadBatchAsync`, `DeleteAsync`, and `DeleteBatchAsync`.
-- The `PostgresMemoryEntry` struct is illustrated with properties such as `Key`, `MetadataString`, `Embedding`, and `Timestamp`.
-- A class diagram for `PostgresMemoryStore` would show constructors, methods, and relationships, including its implementation of the `IMemoryStore` interface and use of the `IPostgresDbClient`.
-- Inferred relationships from the code snippets suggest that `NpgsqlDataSourceBuilder` builds an instance of `NpgsqlDataSource`, and `MemoryBuilder` uses `NpgsqlDataSource` to set up a Postgres memory store with a specified vector size, integrating with a logger factory and an AI text embedding service to create a `TextMemoryPlugin`.
-
-### Sequence Diagrams
-
-- A UML sequence diagram for the `UpsertAsync` method of `IPostgresDbClient` shows the client calling `UpsertAsync` with parameters, the interface checking for an existing entry, updating or inserting the entry in the database, and returning a completed task to the client.
-- The `GetNearestMatchesAsync` method of `PostgresMemoryStore` involves a sequence where the caller invokes the method on the store, which then interacts with the `IPostgresDbClient` to return an `AsyncEnumerable` of tuples containing `PostgresMemoryEntry` and a relevance score.
-- The sequence of operations for configuring a Postgres memory store includes creating an `NpgsqlDataSourceBuilder`, configuring it with `UseVector()`, building an `NpgsqlDataSource`, instantiating and configuring a `MemoryBuilder`, and creating a `TextMemoryPlugin` with the built memory store.
-
-By integrating these knowledge pieces, we have a comprehensive overview of the logical view of the system, detailing the primary classes and interfaces, their relationships as inferred from class diagrams, and the sequences of interactions between these components.
-
-
-***
-
-
-## 9. Process View
-- Concurrent Processes
-- Synchronization Mechanisms
-- Process Diagrams
-
-
-## 9. Process View
-
-### Concurrent Processes
-The `PostgresDbClient` and `PostgresMemoryStore` classes are designed with asynchronous methods, indicating their capability to handle concurrent operations. These operations include creating, updating, and deleting tables, as well as upserting, reading, and querying entries, which can be executed without waiting for each to complete before starting another. The presence of asynchronous methods such as `CreateCollectionAsync`, `DoesCollectionExistAsync`, `GetCollectionsAsync`, `DeleteCollectionAsync`, `UpsertAsync`, `UpsertBatchAsync`, `GetAsync`, `GetBatchAsync`, `GetNearestMatchesAsync`, and `GetNearestMatchAsync` in the `PostgresMemoryStore` class further suggests that the system is designed to handle concurrent I/O operations with the PostgreSQL database.
-
-### Synchronization Mechanisms
-Synchronization is implicitly managed through standard .NET mechanisms such as tasks, async/await, and cancellation tokens, as indicated by the use of `CancellationToken` in method signatures. These mechanisms are employed to coordinate the cancellation of asynchronous operations and ensure data consistency during concurrent access. While the source document does not detail specific synchronization mechanisms, the use of these standard .NET patterns suggests that the `PostgresDbClient` and `PostgresMemoryStore` classes are equipped to handle the complexities of concurrency within the system.
-
-### Process Diagrams
-The source document includes UML sequence diagrams for methods such as `UpsertAsync` and `GetNearestMatchesAsync`, which provide visual representations of the interaction between components during specific operations. For instance, the `UpsertAsync` method's diagram illustrates the flow of operations for upserting an entry into a table, including conditional checks and database acknowledgments. Similarly, the `GetNearestMatchesAsync` method's diagram shows the sequence of actions from the method call to the retrieval of nearest matches and the construction of `MemoryRecord` objects from the database entries. These diagrams serve as process diagrams, offering a clear visualization of the sequence of interactions within the system.
-
-
-***
-
-
-## 10. Deployment View
-- Physical Nodes
-- Deployment Diagrams
-- Mapping of Software to Hardware
-
-
-## 10. Deployment View
-
-### Physical Nodes
-The deployment of the system involves the use of PostgreSQL as a database system. While the source document does not explicitly mention physical nodes, it can be inferred that the deployment would require a server capable of hosting a PostgreSQL database and an environment that supports C# runtime for the client application. Additionally, Docker is utilized to create a containerized instance of PostgreSQL with the pgvector extension, and Azure Database for PostgreSQL - Flexible Server and Azure Cosmos DB for PostgreSQL are mentioned as platforms where the pgvector extension is available. This suggests that the deployment could be on a variety of platforms, including containerized environments and cloud services.
-
-### Deployment Diagrams
-No explicit deployment diagrams are provided in the source document. However, UML Sequence Diagrams are included to illustrate the interactions between the Client (C), MemoryBuilder (MB), and PostgresMemoryStore (PMS) for each extension method. While these diagrams provide insights into the software architecture and the flow of operations, they do not directly translate into deployment diagrams that would show the physical layout of the deployment environment.
-
-### Mapping of Software to Hardware
-The source document does not provide specific details on the mapping of software to hardware. Nevertheless, it can be inferred that the `PostgresMemoryBuilderExtensions` class is part of a software framework that interacts with a PostgreSQL database, which would be hosted on a server or cloud infrastructure. The software component, Microsoft.SemanticKernel.Connectors.Postgres, interacts with the PostgreSQL database with the pgvector extension to implement Semantic Memory. The NpgsqlDataSourceBuilder and NpgsqlDataSource classes are used to configure the connection to the PostgreSQL database, and the MemoryBuilder class is used to integrate the PostgreSQL memory store with the kernel. This indicates a mapping of the software (Semantic Memory implementation) to the PostgreSQL database hardware, whether hosted on Docker containers or Azure services. The deployment environment must support SQL execution within a PostgreSQL database and be capable of handling asynchronous processing efficiently, especially for operations involving JSONB data types and vector embeddings.
-
-
-***
-
-
-## 11. Implementation View
-- Directory Structure
-- Module Organization
-- Dependencies
-
-
-## 11. Implementation View
-
-### Directory Structure
-The directory structure for the project is not explicitly detailed in the source document. However, it is implied that the project follows a nested directory structure, with references to other projects such as `SemanticKernel.Core` suggesting a multi-project solution. The directory structure likely adheres to C# and .NET conventions, which typically include directories for classes, resources, and dependencies. Additionally, the use of Docker for installing the `pgvector` extension and creating a database within a Docker container indicates that the project may include directories for containerization configurations. Examples provided within the directory structure (`../../../samples/KernelSyntaxExamples/`) suggest that the project also includes sample code for memory usage with the kernel.
-
-### Module Organization
-The module organization of the project is centered around the `PostgresDbClient` class and related classes and interfaces such as `PostgresMemoryBuilderExtensions`, `PostgresMemoryEntry`, and `PostgresMemoryStore`. These components are organized into several categories:
-
-- **Constructors**: The `PostgresMemoryStore` class includes constructors for initializing with a connection string, an `NpgsqlDataSource` object, or an `IPostgresDbClient` object for dependency injection.
-- **Table Management**: Methods for creating, checking the existence of, retrieving, and deleting tables.
-- **Data Operations**: Methods for upserting, reading, and deleting entries, including batch operations.
-- **Vector-Based Similarity Search**: Methods for retrieving nearest matches to a given vector.
-- **Collection Management**: Methods for managing collections within the PostgreSQL database.
-- **Record Management**: Methods for handling individual records or batches of records within a collection.
-- **Resource Cleanup**: A `Dispose` method for releasing unmanaged resources.
-
-The `PostgresMemoryBuilderExtensions` class contains extension methods for the `MemoryBuilder` class, indicating a module organization that includes classes for memory store configuration. The `PostgresMemoryEntry` struct is a standalone data structure with properties for key, metadata, embedding, and timestamp, designed for handling memory-related data.
-
-### Dependencies
-The project's dependencies are primarily focused on PostgreSQL and its extensions. The `pgvector` extension is a critical dependency for implementing vector similarity search. The `PostgresDbClient` class relies on the `NpgsqlDataSource` object for database connectivity, indicating a dependency on the Npgsql library, a .NET data provider for PostgreSQL. The `PostgresMemoryStore` class implements the `IMemoryStore` interface and depends on the `pgvector` extension, `NpgsqlDataSource`, and `IPostgresDbClient` interface. The `PostgresMemoryEntry` struct suggests a possible dependency on a numerical library or framework that supports vector operations, which is common in machine learning applications. Additionally, Docker is used for containerization, and links are provided for installing `pgvector` on Azure Database for PostgreSQL and Azure Cosmos DB for PostgreSQL. The system would also require a PostgreSQL database and the necessary infrastructure to run C# code, which may include a .NET runtime environment.
-
----
-
-**Note:** The source document focuses on the setup and usage of the `pgvector` extension with Postgres for semantic memory implementation. For a complete view of the directory structure or a comprehensive list of all dependencies, additional sections of the design document or the project's repository should be consulted.
-
-
-***
-
-
-## 12. Data View
-- Data Models
-- Entity-Relationship Diagrams
-- Data Flow Diagrams
-
-
-## 12. Data View
-
-### Data Models
-The Data Models within the Postgres connector are designed to interact with PostgreSQL databases, managing collections of memory records that include a key, metadata, and an optional embedding vector. These models are essential for the connector's functionality, which leverages the pgvector extension to support vector similarity search. The `PostgresMemoryEntry` struct is a primary example of such a model, encapsulating properties like a unique key, metadata in JSON format, an embedding vector for machine learning models, and a timestamp to record creation or modification times. Additionally, the `PostgresMemoryStore` class, which implements the `IMemoryStore` interface, is indicative of the data model for handling memory stores in a Postgres database context.
-
-### Entity-Relationship Diagrams
-While Entity-Relationship Diagrams (ERDs) are not explicitly provided in the source document, relationships can be inferred from the class structures and method descriptions. For instance, the `PostgresMemoryStore` class's use of an `IPostgresDbClient` object for database operations suggests a one-to-one relationship. Moreover, the `PostgresMemoryStore` class's implementation of the `IMemoryStore` interface implies an inheritance relationship. The `PostgresMemoryEntry` struct, with its unique key, indicates a one-to-many relationship with other entities that require memory entry data, such as machine learning models or semantic analysis systems.
-
-### Data Flow Diagrams
-Data Flow Diagrams (DFDs) are not explicitly included in the source document. However, the UML Sequence Diagram for the `GetNearestMatchesAsync` method and the `UpsertAsync` operation can be interpreted as simplified DFDs, illustrating the flow of data between components such as the Client, `PostgresMemoryStore`, `IPostgresDbClient`, and the Database. These diagrams depict the sequence of method calls and object instantiations that occur during operations like retrieving nearest matches and upserting records. The data flow involves the `PostgresMemoryEntry` struct being used to store and retrieve data from a PostgreSQL database, as part of a larger system for semantic analysis or machine learning tasks.
-
-
-***
-
-
-## 13. Size and Performance
-- System Size Metrics
-- Performance Targets and Benchmarks
-
-
-## 13. Size and Performance
-
-### System Size Metrics
-- The `PostgresDbClient` class is tailored to interact with PostgreSQL databases, managing tables with data entries and vector embeddings. It is initialized with a `NpgsqlDataSource` object, a schema name, and a vector size, indicating the dimensionality of vector embeddings, which suggests the system is designed to handle complex data structures and can be adapted to various database sizes and schemas.
-- The `PostgresMemoryEntry` struct is a data structure for storing memory-related data in a PostgreSQL database, with properties for key storage, metadata storage, embedding storage, and timestamping. The properties include a unique `Key` string, a `MetadataString` that may contain JSON-formatted attributes, a nullable `Vector` type for embedding data, and a nullable `DateTime` object for timestamps.
-- The `PostgresMemoryStore` class interacts with a PostgreSQL database using the `pgvector` extension, indicating that the system's size may be influenced by the capabilities of PostgreSQL and the `pgvector` extension. The class supports storage of embedding vectors, with the size of these vectors being specified during initialization, which relates to the system's size metrics.
-- The system allows for the creation of separate tables for each collection in the database, with the table name being the collection field value, and the vector size for the memory store is specified as 1536 in the provided example.
-
-### Performance Targets and Benchmarks
-- Asynchronous methods in the `PostgresDbClient` class suggest a focus on non-blocking I/O operations for improved performance in concurrent environments. The class's specialized methods for vector-based similarity searches, such as `GetNearestMatchesAsync`, are designed to efficiently retrieve nearest matches to a given vector, which is a performance-critical operation. The use of SQL commands with `ON CONFLICT` clauses in the `UpsertAsync` method indicates an optimization for handling insert or update scenarios efficiently.
-- The `PostgresMemoryEntry` struct's design, intended for use in semantic analysis or machine learning tasks, implies a need for efficient data retrieval and storage. The use of a unique key for each entry suggests an optimization for quick search and access within the database. Nullable properties for `Embedding` and `Timestamp` indicate a flexible design that could potentially improve performance by allowing entries without these data points to save space and processing time.
-- The `PostgresMemoryStore` class's constructors and methods are designed to handle asynchronous operations, which suggests a focus on non-blocking performance characteristics. The class's ability to perform similarity searches and manage memory records, including creating, updating, and deleting records or batches of records, could be part of the performance benchmarks.
-- The pgvector extension supports exact and approximate nearest neighbor search, with exact search providing perfect recall. For approximate nearest neighbor search, performance can be tuned by creating an index with an appropriate number of lists and specifying the number of probes during querying. A starting point for the number of lists is rows / 1000 for up to 1 million rows and sqrt(rows) for over 1 million rows. A starting point for the number of probes is sqrt(lists). The performance trade-off for using approximate nearest neighbor search is between recall and speed. The document provides SQL examples for creating an index based on the data rows of the collection table, which can impact performance.
-
-
-***
-
-
-## 14. Quality Attributes
-- Security Measures
-- Reliability & Availability
-- Maintainability & Scalability
-
-
-## 14. Quality Attributes
-
-### Security Measures
-- The .NET Standard library project for the Postgres connector, while not explicitly detailing security measures, implies security through the maintenance of NuGet package dependencies.
-- The `IPostgresDbClient` interface's design, including asynchronous methods and cancellation tokens, indirectly enhances security by managing operations in a non-blocking manner and allowing controlled access.
-- The `PostgresDbClient` class's use of asynchronous methods and conflict resolution in the `UpsertAsync` method suggests considerations for concurrent access and data integrity.
-- The `PostgresMemoryBuilderExtensions` class, by dealing with database connections, implies the necessity of standard security practices such as protecting connection strings and instances.
-- The `PostgresMemoryEntry` struct's unique identifier (`Key`) could serve as a security measure to ensure data integrity.
-- The `PostgresMemoryStore` class, interacting with a PostgreSQL database, implies adherence to standard database security practices.
-- The connector's requirement for a password during Docker installation and its use of Azure services like Azure Database for PostgreSQL and Azure Cosmos DB for PostgreSQL indicate compliance with their security protocols.
-
-### Reliability & Availability
-- The project's targeting of .NET Standard 2.0 and the inclusion of package references like `Microsoft.Bcl.AsyncInterfaces` suggest a design aimed at reliability across different platforms.
-- The `IPostgresDbClient` interface's methods for database table and entry management, along with its asynchronous design, contribute to system reliability and availability.
-- The `PostgresDbClient` class's suite of asynchronous CRUD operations and reliance on the stability of the PostgreSQL database and network infrastructure ensure reliable database interaction.
-- The `PostgresMemoryBuilderExtensions` class's methods for registering a Postgres memory store with a `MemoryBuilder` enhance the reliability and availability of the memory store.
-- The `PostgresMemoryEntry` struct's `Timestamp` property and nullable `Vector?` type for the `Embedding` property indicate a design that supports robust operation and data availability.
-- The `PostgresMemoryStore` class's robust methods and use of asynchronous programming patterns and cancellation tokens suggest a focus on reliable operation and high availability.
-- The use of Postgres and the pgvector extension, along with the support for Azure services, underscores a commitment to reliability and high availability.
-
-### Maintainability & Scalability
-- The .NET Standard library project's use of shared properties imported from external files and the clear structure of the XML configuration file support maintainability.
-- The `IPostgresDbClient` interface's consistent coding style and conventions, along with its support for batch operations and asynchronous programming model, facilitate maintainability and scalability.
-- The `PostgresDbClient` class's well-documented nature, including UML diagrams, and its design for scalable vector-based data operations aid in maintainability and scalability.
-- The `CreateTableAsync` method's consistent table structure and use of `CREATE TABLE IF NOT EXISTS` in the SQL command within the method indicate considerations for maintainability and scalability.
-- The `PostgresMemoryBuilderExtensions` class's straightforward methods and use of extension methods for easy addition of new functionalities aid in maintainability, with configuration options suggesting scalability.
-- The `PostgresMemoryEntry` struct's simplicity, clear separation of concerns, and design for easy expandability support maintainability and scalability.
-- The `PostgresMemoryStore` class's constructors for different types of database connections, batch operations, and use of `IAsyncEnumerable` in methods indicate a system designed for maintainability and scalability.
-- The documentation for the connector, including installation instructions, quick start guide, index creation advice, and migration scripts, is crucial for maintainability and scalability considerations.
-
-
-***
-
-
-## 15. Technical Risks and Mitigations
-- Identified Risks
-- Mitigation Strategies
-- Contingency Plans
-
-
-## 15. Technical Risks and Mitigations
-
-### Identified Risks
-1. **Asynchronous Operations**: The interface methods are asynchronous, which could lead to potential issues with concurrency and data consistency if not handled properly.
-2. **Complex Querying**: The method `GetNearestMatchesAsync` involves complex querying for nearest matches based on vector similarity, which may be computationally intensive and could affect performance.
-3. **Complex SQL Operations**: The class encapsulates complex SQL operations, which could lead to potential errors in data retrieval or manipulation if not implemented correctly.
-4. **Concurrency and Performance**: The class provides asynchronous methods for CRUD operations, which could lead to concurrency issues or performance bottlenecks if not managed correctly.
-5. **Data Integrity**: The `UpsertAsync` method performs an upsert operation based on the presence of a conflict on the key column. There is a risk of data corruption if the upsert operation does not execute atomically.
-6. **Data Structure Limitations**: The `PostgresMemoryEntry` struct may have limitations in handling complex data types beyond strings, vectors, and timestamps.
-7. **Database Connection Failures**: The `PostgresMemoryStore` class relies on a stable connection to the PostgreSQL database. Connection issues could lead to failures in initializing the class or executing its methods.
-8. **Database Connectivity Issues**: The `PostgresDbClient` class relies on a `NpgsqlDataSource` object for database connectivity. Any issues with the database connection could disrupt the functionality of the class.
-9. **Database Dependency**: The entire interface relies on the PostgreSQL database's availability and performance, which could be a single point of failure.
-10. **Database Integration**: Challenges may arise when integrating the `PostgresMemoryEntry` struct with the PostgreSQL database, especially in maintaining the uniqueness of the `Key` property.
-11. **Dependency on External Packages**: The project relies on NuGet packages like `Microsoft.Bcl.AsyncInterfaces` and `Pgvector`, which may have their own update cycles and potential breaking changes.
-12. **Dependency on pgvector Extension**: The connector requires the pgvector extension to be installed on Postgres, which adds a dependency on an external open-source project.
-13. **Extension Dependency**: The class depends on the `pgvector` extension for vector operations. If this extension is not installed, not supported by the PostgreSQL version in use, or malfunctions, the vector-related functionalities will not work.
-14. **Performance Bottlenecks**: The similarity search operations, which involve vector comparisons, could become a performance bottleneck, especially with large datasets or high query volumes.
-15. **Performance Issues**: The efficiency of storing and retrieving large volumes of memory entries could be a concern, affecting the overall performance of the system.
-16. **Resource Management**: The class includes a `Dispose` method for resource cleanup, which if not used properly, could lead to resource leaks.
-17. **Schema Changes**: The class is initialized with a schema name, and any changes to the schema could affect the class's ability to interact with the database.
-18. **Table Management**: Operations such as creating and deleting tables could lead to data loss if not managed correctly.
-19. **Timestamp Consistency**: Ensuring that the `Timestamp` property consistently records in `DateTimeKind.Utc` across different systems and time zones.
-20. **Vector Size Limitations**: The class is designed with a specific vector size for the embeddings. If the dimensionality of the vector embeddings needs to change, it could pose a risk to the system's operation.
-
-### Mitigation Strategies
-1. **Atomic Transactions**: Ensure that the `UpsertAsync` method and other data manipulation operations are atomic to maintain data integrity.
-2. **Concurrency Control**: Implement robust concurrency control mechanisms to ensure data consistency during asynchronous operations.
-3. **Configurable Vector Size**: Allow the vector size to be configurable or adaptable to changes to ensure the class can handle different vector dimensions.
-4. **Database Constraints**: Implement database constraints and indexing to ensure the uniqueness and efficient retrieval of the `Key` property.
-5. **Database Redundancy**: Establish database redundancy and failover protocols to mitigate the risk of a single point of failure.
-6. **Extensibility Review**: Regularly review and update the struct to handle additional data types as needed.
-7. **Performance Optimization**: Optimize the querying algorithms and possibly index the vectors to improve the performance of `GetNearestMatchesAsync`.
-8. **Performance Testing**: Conduct thorough performance testing and optimization to handle large datasets effectively.
-9. **Robust Connection Handling**: Implement retry logic and connection resilience patterns to handle transient failures and ensure the class can recover from database connection issues.
-10. **Safe Table Operations**: Implement safeguards and confirmations before performing destructive table operations like `DeleteTableAsync`.
-11. **Schema Versioning**: Use schema versioning and migration strategies to handle changes in the database schema without affecting the class's operations.
-12. **SQL Operation Validation**: Thoroughly test and validate all SQL operations to minimize the risk of errors in complex queries.
-13. **Time Sync Protocols**: Use time synchronization protocols to maintain consistent timestamps across different servers and time zones.
-
-### Contingency Plans
-1. **Audit Trails**: Maintain audit trails for table management operations to track and potentially reverse any unintended changes.
-2. **Backup and Recovery**: Regularly backup the database and test recovery procedures to minimize data loss in case of failures.
-3. **Data Backup and Recovery**: Regularly back up the database to enable recovery in case of data loss due to concurrency issues.
-4. **Data Structure Evolution**: Have a plan for evolving the data structure without causing significant downtime or data migration issues.
-5. **Fallback Database Connection**: Have a fallback or secondary database connection option in case the primary connection fails.
-6. **Fallback to Alternative Storage**: In case of persistent database connection issues, have a fallback mechanism to an alternative storage solution.
-7. **Performance Monitoring**: Continuously monitor the performance of the class's operations and have a plan to scale or optimize as needed.
-8. **Resource Allocation**: Ensure that there are resources allocated for scaling the database and struct as needed, including hardware and software upgrades.
-9. **Rollback Mechanisms**: In case of concurrency issues, have a rollback mechanism to revert to the last consistent state.
-10. **Scalability Solutions**: If performance becomes an issue, consider scaling the database horizontally or vertically, or using more efficient data structures.
-11. **Time Conversion Utilities**: Develop utilities to convert and verify timestamps if inconsistencies are detected.
-
-
-***
-
-
-## 16. Cross-Cutting Concerns
-- Internationalization
-- Logging and Monitoring
-- Error Handling Strategies
-
-
-## 16. Cross-Cutting Concerns
-
-### Internationalization
-The source documents reviewed do not provide specific information regarding internationalization within the context of the `IPostgresDbClient` interface or the `PostgresMemoryStore` class. Consequently, no details on internationalization practices or strategies can be extracted from the provided source documents. It is recommended to consult additional documentation or source code for relevant details on internationalization.
-
-### Logging and Monitoring
-The source documents indicate that logging is integrated into the system, as evidenced by the mention of a `loggerFactory` in the Quick start section. However, the exact implementation details or strategies for logging and monitoring are not described. Additionally, the `PostgresMemoryEntry` struct includes a `Timestamp` property with `DateTimeKind.Utc`, which could be utilized for logging and monitoring purposes, ensuring time consistency across different time zones. Despite these references, explicit information on logging and monitoring capabilities or strategies is not provided in the source documents.
-
-### Error Handling Strategies
-Error handling strategies are not explicitly discussed in the source documents. The asynchronous nature of the methods in the `IPostgresDbClient` interface suggests that error handling is an important consideration, likely involving exceptions and asynchronous patterns in C#. The migration script within the source documents prompts users to consider the implications of potentially destructive operations, indicating a cautious approach to error avoidance. However, without explicit documentation on error handling strategies, no further relevant information can be extracted. It is advisable to refer to additional project documentation or the actual codebase for comprehensive error handling practices.
-
-
-***
-
-
-## 17. Tools and Technologies
-- Development Tools
-- Frameworks and Libraries
-- External Services/APIs
-
-
-## 17. Tools and Technologies
-
-### Development Tools
-- C# is the primary programming language used for the implementation of classes and interfaces such as `PostgresDbClient` and `IPostgresDbClient`.
-- Docker is employed to install the `pgvector` extension within a Postgres container.
-- Integrated Development Environments (IDEs) compatible with C#, such as Visual Studio or Visual Studio Code, are inferred to be used based on the C# code snippets provided.
-- UML sequence diagrams are utilized to illustrate the flow of operations, indicating the use of UML tools for documentation.
-- XML configuration is applied for setting up .NET Standard library project settings, indicating the use of XML-based tools for configuration management.
-
-### Frameworks and Libraries
-- .NET Standard 2.0 is specified as the target framework for the project.
-- Microsoft.Bcl.AsyncInterfaces is a NuGet package used for providing asynchronous programming interfaces.
-- Npgsql, a .NET data provider for PostgreSQL, is implied by the use of `NpgsqlDataSource` objects for database connectivity and is used in conjunction with the `pgvector` extension.
-- NumSharp or Math.NET Numerics might be utilized for numerical computing, as suggested by the use of a `Vector` type for the `Embedding` property.
-- Pgvector is a NuGet package that supports the `pgvector` extension in Postgres, facilitating vector similarity querying.
-- PostgresMemoryBuilderExtensions class provides extension methods for integrating Postgres memory stores with the `MemoryBuilder`.
-
-### External Services/APIs
-- Azure Cosmos DB for PostgreSQL and Azure Database for PostgreSQL - Flexible Server are cloud database services that support the `pgvector` extension.
-- NuGet serves as the package manager and distribution service for packages like Microsoft.Bcl.AsyncInterfaces and Pgvector.
-- OpenAI Text Embedding Generation API is used for generating text embeddings, as demonstrated in the C# code example.
-- PostgreSQL database is the primary external service with which the `PostgresDbClient` class and other components interact.
-- Semantic Kernel plugins and semantic memory systems are implied to be used within the project's scope, though not explicitly detailed in the provided knowledge pieces.
-- Vector similarity querying is facilitated by methods such as `GetNearestMatchesAsync`, which retrieves nearest matches based on vector similarity, indicating the use of APIs or services that support this functionality.
-
-
-***
-
-
-## 18. References
-- External Documents
-- Standards and Guidelines
-
-
-## 18. References
-
-### External Documents
-The project incorporates shared properties from external configuration files, which are essential for maintaining consistency across multiple projects. These files include:
-1. `$(RepoRoot)/dotnet/nuget/nuget-package.props`
-2. `$(RepoRoot)/dotnet/src/InternalUtilities/src/InternalUtilities.props`
-3. pgvector extension documentation: [pgvector GitHub repository](https://github.com/pgvector/pgvector#installation)
-4. Azure Database for PostgreSQL documentation: [How to use pgvector on Azure Database for PostgreSQL](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/how-to-use-pgvector)
-5. Azure Cosmos DB for PostgreSQL documentation: [How to use pgvector on Azure Cosmos DB for PostgreSQL](https://learn.microsoft.com/en-us/azure/cosmos-db/postgresql/howto-use-pgvector)
-6. Example usage of Postgres as a semantic memory store: [Example 14](../../../samples/KernelSyntaxExamples/Example14_SemanticMemory.cs) and [Example 15](../../../samples/KernelSyntaxExamples/Example15_TextMemoryPlugin.cs)
-
-### Standards and Guidelines
-The project is designed to adhere to the .NET Standard 2.0 framework, ensuring broad compatibility across different platforms. It specifies dependencies on NuGet packages such as `Microsoft.Bcl.AsyncInterfaces` and `Pgvector` to provide necessary functionalities. Additionally, the project references the `..\..\SemanticKernel.Core\SemanticKernel.Core.csproj` within the same solution to leverage core capabilities. The following standards and guidelines have been identified:
-1. .NET Standard 2.0 framework for compatibility.
-2. NuGet package dependencies for required functionalities.
-3. Internal project reference to `SemanticKernel.Core` for core functionalities.
-4. Postgres naming convention as per the [PostgreSQL official documentation](https://www.postgresql.org/docs/15/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS).
-5. Adherence to SQL standards and PostgreSQL-specific conventions implied by the design for PostgreSQL database interaction.
-6. Compliance with C# coding standards and best practices suggested by the use of the C# programming language.
-7. Implicit adherence to software design best practices, as indicated by the use of UML class diagrams and the consistent use of `DateTimeKind.Utc` for the `DateTime` property.
-
-By integrating these references and standards, the project ensures consistency, reliability, and adherence to established practices in software development.
-
-
-***
-
-
-## 19. Appendix
-- Additional Diagrams
-- Glossary of Terms
-
-
-## 19. Appendix
-
-### Additional Diagrams
-
-The appendix includes several UML diagrams that provide a visual representation of the system's architecture and interactions:
-
-1. **UML Class Diagram for `PostgresMemoryEntry` struct**:
+The class diagrams provide a visual representation of the structure and relationships of the primary classes and interfaces within the system:
+
+1. `IPostgresDbClient` Interface:
+```mermaid
+classDiagram
+    class IPostgresDbClient {
+        - DoesTableExistsAsync()
+        - CreateTableAsync()
+        - GetTablesAsync()
+        - DeleteTableAsync()
+        - UpsertAsync()
+        - GetNearestMatchesAsync()
+        - ReadAsync()
+        - ReadBatchAsync()
+        - DeleteAsync()
+        - DeleteBatchAsync()
+    }
+```
+
+2. `PostgresDbClient` Class:
+```mermaid
+classDiagram
+    class PostgresDbClient {
+        -NpgsqlDataSource _dataSource
+        -int _vectorSize
+        -string _schema
+        +DoesTableExistsAsync(tableName, cancellationToken)
+        +CreateTableAsync(tableName, cancellationToken)
+        +GetTablesAsync(cancellationToken)
+        +DeleteTableAsync(tableName, cancellationToken)
+        +UpsertAsync(tableName, key, metadata, embedding, timestamp, cancellationToken)
+        +GetNearestMatchesAsync(tableName, embedding, limit, minRelevanceScore, withEmbeddings, cancellationToken)
+        +ReadAsync(tableName, key, withEmbeddings, cancellationToken)
+        +ReadBatchAsync(tableName, keys, withEmbeddings, cancellationToken)
+        +DeleteAsync(tableName, key, cancellationToken)
+        +DeleteBatchAsync(tableName, keys, cancellationToken)
+        -ReadEntryAsync(dataReader, withEmbeddings, cancellationToken)
+        -GetFullTableName(tableName)
+    }
+```
+
+3. `PostgresMemoryStore` Class and Related Interfaces:
+```mermaid
+classDiagram
+    class MemoryBuilder {
+        +WithMemoryStore(Func~MemoryStore~)
+    }
+    class PostgresMemoryStore {
+        -string connectionString
+        -int vectorSize
+        -string schema
+        +PostgresMemoryStore(string, int, string)
+        +PostgresMemoryStore(NpgsqlDataSource, int, string)
+        +PostgresMemoryStore(IPostgresDbClient)
+    }
+    class NpgsqlDataSource {
+    }
+    interface IPostgresDbClient {
+    }
+    MemoryBuilder <-- PostgresMemoryBuilderExtensions : extends with
+    PostgresMemoryStore <-- PostgresMemoryBuilderExtensions : creates instances
+    NpgsqlDataSource <-- PostgresMemoryBuilderExtensions : uses
+    IPostgresDbClient <-- PostgresMemoryBuilderExtensions : uses
+```
+
+4. `PostgresMemoryEntry` Struct:
 ```mermaid
 classDiagram
     class PostgresMemoryEntry {
@@ -585,9 +323,37 @@ classDiagram
         +DateTime? Timestamp
     }
 ```
-This diagram illustrates the structure of the `PostgresMemoryEntry` struct, which includes properties for key identification, metadata, vector embedding, and timestamp.
 
-2. **UML Sequence Diagram for UpsertAsync Method**:
+5. `PostgresMemoryStore` Class with `IMemoryStore` and `IPostgresDbClient` Interfaces:
+```mermaid
+classDiagram
+    class PostgresMemoryStore {
+        +PostgresMemoryStore(string connectionString, int vectorSize, string schema)
+        +PostgresMemoryStore(NpgsqlDataSource dataSource, int vectorSize, string schema)
+        +PostgresMemoryStore(IPostgresDbClient postgresDbClient)
+        +CreateCollectionAsync(string collectionName)
+        +DoesCollectionExistAsync(string collectionName)
+        +GetCollectionsAsync()
+        +DeleteCollectionAsync(string collectionName)
+        +UpsertAsync(string collectionName, MemoryRecord record)
+        +UpsertBatchAsync(string collectionName, IEnumerable~MemoryRecord~ records)
+        +GetAsync(string collectionName, string key, bool withEmbedding)
+        +GetBatchAsync(string collectionName, IEnumerable~string~ keys, bool withEmbeddings)
+        +RemoveAsync(string collectionName, string key)
+        +RemoveBatchAsync(string collectionName, IEnumerable~string~ keys)
+        +GetNearestMatchesAsync(string collectionName, ReadOnlyMemory~float~ embedding, int limit, double minRelevanceScore, bool withEmbeddings)
+        +GetNearestMatchAsync(string collectionName, ReadOnlyMemory~float~ embedding, double minRelevanceScore, bool withEmbedding)
+        +Dispose()
+    }
+    PostgresMemoryStore --|> IMemoryStore : implements
+    PostgresMemoryStore "1" -- "1" IPostgresDbClient : uses
+```
+
+### Sequence Diagrams
+
+The sequence diagrams illustrate the flow of operations for various methods within the system:
+
+1. `UpsertAsync` Method Interaction with `IPostgresDbClient` Interface:
 ```mermaid
 sequenceDiagram
     participant C as Client
@@ -604,50 +370,677 @@ sequenceDiagram
     end
     I-->>-C: Return Task (completed)
 ```
-This sequence diagram depicts the decision-making process within the `IPostgresDbClient` interface to either update an existing entry or insert a new one, followed by an acknowledgment from the database.
 
-3. **UML Sequence Diagrams for `WithPostgresMemoryStore`**:
-These diagrams demonstrate the initialization process of `PostgresMemoryStore` using different configurations, such as connection string, `NpgsqlDataSource`, and `IPostgresDbClient`.
+2. `UpsertAsync` Operation in `PostgresDbClient` Class:
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant P as PostgresDbClient
+    participant DB as Database
+
+    C->>+P: UpsertAsync(tableName, key, metadata, embedding, timestamp)
+    P->>+DB: INSERT INTO tableName...
+    Note over DB: Insert or Update Entry
+    DB-->>-P: Acknowledgement
+    P-->>-C: Completion
+```
+
+3. `WithPostgresMemoryStore` Extension Methods in `PostgresMemoryBuilderExtensions` Class:
+- Connection String:
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant MB as MemoryBuilder
+    participant PMS as PostgresMemoryStore
+
+    C->>MB: WithPostgresMemoryStore(connectionString, vectorSize, schema)
+    MB->>PMS: new PostgresMemoryStore(connectionString, vectorSize, schema)
+    PMS-->>MB: PostgresMemoryStore instance
+    MB-->>C: builder (configured with PostgresMemoryStore)
+```
+- NpgsqlDataSource:
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant MB as MemoryBuilder
+    participant PMS as PostgresMemoryStore
+
+    C->>MB: WithPostgresMemoryStore(dataSource, vectorSize, schema)
+    MB->>PMS: new PostgresMemoryStore(dataSource, vectorSize, schema)
+    PMS-->>MB: PostgresMemoryStore instance
+    MB-->>C: builder (configured with PostgresMemoryStore)
+```
+- IPostgresDbClient:
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant MB as MemoryBuilder
+    participant PMS as PostgresMemoryStore
+
+    C->>MB: WithPostgresMemoryStore(postgresDbClient)
+    MB->>PMS: new PostgresMemoryStore(postgresDbClient)
+    PMS-->>MB: PostgresMemoryStore instance
+    MB-->>C: builder (configured with PostgresMemoryStore)
+```
+
+4. `GetNearestMatchesAsync` Method in `PostgresMemoryStore` Class:
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant P as PostgresMemoryStore
+    participant D as IPostgresDbClient
+
+    C->>+P: GetNearestMatchesAsync(collectionName, embedding, limit, minRelevanceScore, withEmbeddings)
+    P->>+D: GetNearestMatchesAsync(tableName, new Vector(embedding), limit, minRelevanceScore, withEmbeddings)
+    D-->>-P: AsyncEnumerable(PostgresMemoryEntry, double)
+    loop For each entry
+        P->>P: GetMemoryRecordFromEntry(entry)
+    end
+    P-->>-C: AsyncEnumerable(MemoryRecord, double)
+```
+
+5. Initialization of Memory Store with PostgreSQL and Creating an Index for Vector Similarity Search:
+- The sequence for initializing the memory store with PostgreSQL involves configuring the `NpgsqlDataSourceBuilder` with connection details, using the `UseVector()` method, and building the `NpgsqlDataSource`. The `MemoryBuilder` is then instantiated and configured with the `NpgsqlDataSource` using the `WithPostgresMemoryStore()` method. Additional configurations such as attaching a logger and setting up text embedding generation are applied before building the memory store. Finally, the `TextMemoryPlugin` is instantiated with the memory store and imported into the kernel.
+- The sequence for creating an index involves determining the row count in the collection table, deciding on the type of index (exact or approximate), and executing SQL commands to create the index on the embedding column using the pgvector extension.
+
+This comprehensive logical view, including class and sequence diagrams, provides a clear understanding of the system's architecture, the relationships between components, and the flow of operations for key functionalities.
+
+
+***
+
+
+## 9. Process View
+- Concurrent Processes
+- Synchronization Mechanisms
+- Process Diagrams
+
+
+## 9. Process View
+
+### Concurrent Processes
+The .NET Standard library project for the Postgres connector is designed to handle concurrent processes efficiently. This is evident from the asynchronous operations supported by the `IPostgresDbClient` and `PostgresDbClient` classes, which include methods like `UpsertAsync`, `ReadAsync`, `ReadBatchAsync`, `DeleteAsync`, `DeleteBatchAsync`, and `GetNearestMatchesAsync`. These methods enable multiple clients to interact with the database simultaneously without blocking each other, allowing for concurrent database connections and operations.
+
+The `PostgresMemoryStore` class further supports concurrent operations on memory records within a PostgreSQL database, with methods such as `UpsertAsync`, `UpsertBatchAsync`, `GetAsync`, `GetBatchAsync`, `GetNearestMatchesAsync`, and `GetNearestMatchAsync` designed for asynchronous execution.
+
+Additionally, the Microsoft.SemanticKernel.Connectors.Postgres connector uses Postgres and the pgvector extension to implement Semantic Memory, which involves concurrent processes for handling vector similarity searches, including exact and approximate nearest neighbor searches.
+
+### Synchronization Mechanisms
+Synchronization mechanisms are crucial for ensuring thread safety and data consistency during concurrent operations. While the source documents do not explicitly detail synchronization mechanisms, the use of asynchronous programming patterns and `CancellationToken` parameters in the `IPostgresDbClient` and `PostgresDbClient` classes suggests that thread safety and proper synchronization are inherent in the design. These mechanisms allow for cooperative cancellation of asynchronous operations and ensure that the completion of tasks is synchronized with the continuation of the process.
+
+The `PostgresMemoryStore` class uses `CancellationToken` and `IAsyncEnumerable` return types to provide synchronization for concurrent access to a sequence of data. Additionally, standard database concurrency control mechanisms such as locks, transactions, and isolation levels are likely employed to ensure consistent and synchronized access to shared data.
+
+The use of Docker containers for deploying the Postgres database with the pgvector extension also acts as a synchronization mechanism, providing isolated and consistent environments for the connector's operation.
+
+### Process Diagrams
+The source documents include UML sequence diagrams for various methods, illustrating the flow of operations and the asynchronous nature of the interactions. For instance, the `UpsertAsync` method's sequence diagram shows the concurrent nature of the operation, with the client initiating the process and the database performing an update or insert operation based on the entry's existence.
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant I as IPostgresDbClient
+    participant DB as Database
+
+    C->>+I: UpsertAsync(tableName, key, metadata, embedding, timestamp)
+    alt Entry with key exists
+        I->>+DB: Update entry
+        DB-->>-I: Acknowledge update
+    else Entry does not exist
+        I->>+DB: Insert new entry
+        DB-->>-I: Acknowledge insert
+    end
+    I-->>-C: Return Task (completed)
+```
+
+An expanded UML sequence diagram for concurrent `UpsertAsync` operations through the `PostgresDbClient` represents two clients performing concurrent operations, with the database acknowledging each operation separately.
+
+```mermaid
+sequenceDiagram
+    participant C1 as Client1
+    participant C2 as Client2
+    participant P as PostgresDbClient
+    participant DB as Database
+
+    C1->>+P: UpsertAsync(tableName, key1, metadata1, embedding1, timestamp1)
+    C2->>+P: UpsertAsync(tableName, key2, metadata2, embedding2, timestamp2)
+    P->>+DB: INSERT INTO tableName...
+    Note over DB: Insert or Update Entry 1
+    P->>+DB: INSERT INTO tableName...
+    Note over DB: Insert or Update Entry 2
+    DB-->>-P: Acknowledgement 1
+    DB-->>-P: Acknowledgement 2
+    P-->>-C1: Completion
+    P-->>-C2: Completion
+```
+
+The `PostgresMemoryBuilderExtensions` class's UML sequence diagrams demonstrate the synchronous process flow during the configuration of the Postgres memory store, with a linear sequence of steps without branching or concurrent interactions.
+
+For the `PostgresMemoryEntry` struct, while specific process diagrams are not provided, a UML activity diagram or sequence diagram could be created to illustrate the flow of operations involving this struct within the system, showing the sequence of interactions between different system components and the database.
+
+The high-level process flow diagram for the Microsoft.SemanticKernel.Connectors.Postgres connector would include steps such as installation of the pgvector extension, creation of a database, configuration of the NpgsqlDataSource, and execution of SQL scripts for creating and indexing tables, with conditional logic for determining the number of lists for the index based on the row count.
+
+***Note:*** The actual implementation details for handling concurrency, such as connection pooling, transaction management, and isolation levels, are not provided in the source document and would need to be inferred from the actual codebase or further documentation.
+
+
+***
+
+
+## 10. Deployment View
+- Physical Nodes
+- Deployment Diagrams
+- Mapping of Software to Hardware
+
+
+## 10. Deployment View
+
+### Physical Nodes
+The deployment architecture for the .NET Standard library project designed to create a Postgres connector involves several physical nodes. These include:
+
+- A server or a set of servers where the PostgreSQL database is hosted, which must support .NET Standard 2.0 and be capable of running .NET applications.
+- Application layer nodes, which may consist of web servers or application servers that interact with the `PostgresMemoryEntry` struct and the `MemoryBuilder` framework.
+- A PostgreSQL database server node that is configured to support vector operations for similarity searches, indicating the need for appropriate extensions or configurations, such as the `pgvector` extension.
+- Machine learning model servers, if applicable, given the use of embeddings within the `PostgresMemoryEntry` struct.
+- Docker containers for the installation of the pgvector extension on Postgres, which can be deployed on cloud platforms such as Azure Database for PostgreSQL - Flexible Server and Azure Cosmos DB for PostgreSQL.
+
+### Deployment Diagrams
+Deployment diagrams for this project would illustrate the following:
+
+- A Docker container named `postgres-pgvector` running the Postgres database with the pgvector extension enabled, exposing port 5432.
+- Cloud deployment options, with Azure services hosting the Postgres database and the pgvector extension.
+- The relationship between application server(s) where the `PostgresMemoryStore` class is deployed and the database server hosting the PostgreSQL instance, including network connectivity and relevant protocols or ports used for communication.
+- The three-tier deployment architecture with client application instances, the `IPostgresDbClient` middleware or service layer, and the PostgreSQL database server.
+
+### Mapping of Software to Hardware
+The mapping of software components to hardware in the deployment architecture includes:
+
+- The `PostgresDbClient` class and other software components such as `NpgsqlDataSourceBuilder`, `NpgsqlDataSource`, `MemoryBuilder`, and `TextMemoryPlugin`, which interact with the Postgres database to utilize it as a semantic memory store.
+- The `PostgresMemoryStore` instances are created and configured within the `MemoryBuilder` framework, indicating that the software components are deployed on the same hardware or virtualized environment that runs the `MemoryBuilder`.
+- The `PostgresMemoryStore` class, as part of an application, would be deployed on one or more application servers. These servers must have network access to the PostgreSQL database server.
+- The PostgreSQL database software runs on the database server node, and the client application, which could be a web service, desktop application, or another type of service, would be deployed on a separate node, such as a web server or client machine.
+- The deployment should consider the resource requirements for handling vector operations, which may be resource-intensive, and ensure that the hardware is appropriately provisioned to handle the computational load.
+
+The deployment view should focus on the infrastructure required to support the functionalities of the `PostgresMemoryEntry` struct within a PostgreSQL database environment, considering the needs for semantic analysis or machine learning tasks. The deployment diagram will visualize the physical layout and the interaction between different nodes, while the mapping will detail how the software components are distributed across the hardware infrastructure.
+
+
+***
+
+
+## 11. Implementation View
+- Directory Structure
+- Module Organization
+- Dependencies
+
+
+## 11. Implementation View
+
+### Directory Structure
+The directory structure across the various components of the system is not explicitly detailed in the source documents. However, it can be inferred that the system is organized hierarchically, with a clear separation of concerns. For instance, the `PostgresMemoryEntry` struct suggests a directory structure that may include folders for database interaction (`Database/`), models (`Models/`), and utilities (`Utilities/`). Similarly, the `PostgresMemoryStore` and `IPostgresDbClient` interface would likely reside in directories dedicated to database interaction or within similar namespaces. The `Microsoft.SemanticKernel.Connectors.Postgres` connector is part of a larger project that includes a `samples` directory with `KernelSyntaxExamples`, indicating a structured directory that separates features such as examples and core functionality.
+
+### Module Organization
+The system's source code is organized into modules that encapsulate specific functionalities. The `PostgresDbClient` class, for example, is a single module that handles interactions with PostgreSQL databases, particularly for operations involving vector embeddings. The `PostgresMemoryBuilderExtensions` class is a utility class that provides extension methods for the `MemoryBuilder` class, configuring a Postgres memory store within the `MemoryBuilder` framework. The `Microsoft.SemanticKernel.Connectors.Postgres` connector integrates Postgres with Semantic Memory using the `pgvector` extension and includes examples demonstrating its usage. Each module is designed with asynchronous methods, suggesting that implementation modules should be capable of handling non-blocking I/O operations.
+
+### Dependencies
+The project has a mix of package and project dependencies. Package dependencies include `Microsoft.Bcl.AsyncInterfaces` for asynchronous programming interfaces and `Pgvector` to support the `pgvector` extension in Postgres. Project dependencies include `SemanticKernel.Core`, which provides core functionalities to the system. The `PostgresMemoryStore` class depends on the `IMemoryStore` interface, the `pgvector` extension, `NpgsqlDataSource`, and the `IPostgresDbClient` interface for database operations. The `PostgresMemoryBuilderExtensions` class depends on the `MemoryBuilder` class, `PostgresMemoryStore` class, `NpgsqlDataSource`, and `IPostgresDbClient`. The `Microsoft.SemanticKernel.Connectors.Postgres` connector relies on Postgres, `pgvector`, Docker, Npgsql, and optionally on cloud-based services like Azure Database for PostgreSQL - Flexible Server and Azure Cosmos DB for PostgreSQL.
+
+### UML Diagramming Information
+UML diagrams are provided for various components to illustrate their structure and interactions. For instance, the UML sequence diagram for the `UpsertAsync` method in the `IPostgresDbClient` interface shows the flow of operations and interactions between a client, the interface, and the database. The UML class diagram for the `PostgresDbClient` class provides a visual representation of its structure, detailing its private fields, public methods, and their relationships. Similarly, UML sequence diagrams for the `PostgresMemoryBuilderExtensions` class illustrate the interaction between the `Client`, `MemoryBuilder`, and `PostgresMemoryStore` during the configuration process. The UML class diagram for the `PostgresMemoryEntry` struct and the sequence diagram for the `GetNearestMatchesAsync` method in the `PostgresMemoryStore` class are also included to provide clarity on their respective structures and operations.
+
+**Note**: The source document does not provide explicit textual information about the internal architecture or class design of the `Microsoft.SemanticKernel.Connectors.Postgres` module. The information provided focuses more on the usage and setup of the `pgvector` extension within a Postgres database and its integration with the Semantic Kernel's memory store. The migration script suggests that the module's implementation may involve dynamic SQL for table and index creation based on the data stored in the memory tables.
+
+
+***
+
+
+## 12. Data View
+- Data Models
+- Entity-Relationship Diagrams
+- Data Flow Diagrams
+
+
+## 12. Data View
+
+### Data Models
+The data models for the Postgres connector library and associated Semantic Kernel plugins are designed to interact with PostgreSQL database tables that store data entries with associated vector embeddings. These models are crucial for the functionalities of the Postgres connector, which include operations such as creating, checking the existence of, retrieving, and deleting collections and records, as well as performing similarity searches based on cosine similarity of embedding vectors.
+
+The primary components of the data model include:
+- **Key**: A unique identifier for each data entry.
+- **Metadata**: A JSONB field to store associated metadata.
+- **Embedding**: A vector field to store the vector embeddings, which are used for querying nearest matches based on vector similarity.
+- **Timestamp**: A timestamp field to record the time of the entry.
+
+The `PostgresMemoryEntry` struct is another significant part of the data model, which includes a key, a metadata string, an optional embedding vector, and an optional timestamp.
+
+### Entity-Relationship Diagrams
+Entity-Relationship Diagrams (ERDs) are not explicitly provided in the source document, but the relationships can be inferred from the data models and operations described. The primary relationship is a one-to-many relationship between Tables and Entries, where one table can contain multiple entries, but each entry belongs to exactly one table. Additionally, a self-referencing relationship within Entries is implied for nearest match querying, as vector embeddings within entries are used to find the closest matches.
+
+### Data Flow Diagrams
+Data Flow Diagrams (DFDs) are not included in the source document, but can be constructed based on the UML sequence diagrams provided. For instance, the `UpsertAsync` operation can be represented in a DFD that shows the data processes involved in upserting an entry, the data stores (tables), and the data flows between the client, the `IPostgresDbClient` interface, and the database. The steps include the client sending an upsert request, the `IPostgresDbClient` performing an update or insert operation, the database acknowledging the operation, and the `IPostgresDbClient` returning the completion status to the client.
+
+The `GetNearestMatchesAsync` method's data flow involves the caller invoking the method on the `PostgresMemoryStore` instance, which then calls the `IPostgresDbClient`. The `IPostgresDbClient` returns an asynchronous enumerable of tuples, each containing a `PostgresMemoryEntry` and a relevance score, which the `PostgresMemoryStore` converts into `MemoryRecord` tuples to return to the caller.
+
+### UML Diagrams
+The UML diagrams provided in the source document include class diagrams and sequence diagrams that represent the class structure and data flow for specific operations. These diagrams are essential for understanding the architecture and interactions within the system.
+
+**UML Class Diagram for PostgresMemoryEntry:**
+```mermaid
+classDiagram
+    class PostgresMemoryEntry {
+        +string Key
+        +string MetadataString
+        +Vector? Embedding
+        +DateTime? Timestamp
+    }
+```
+
+**UML Sequence Diagram for Upsert Operation:**
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant P as PostgresDbClient
+    participant DB as Database
+
+    C->>+P: UpsertAsync(tableName, key, metadata, embedding, timestamp)
+    P->>+DB: INSERT INTO tableName...
+    Note over DB: Insert or Update Entry
+    DB-->>-P: Acknowledgement
+    P-->>-C: Completion
+```
+
+These UML diagrams, along with the inferred ERDs and DFDs, provide a comprehensive view of the data architecture and flows within the system.
+
+
+***
+
+
+## 13. Size and Performance
+- System Size Metrics
+- Performance Targets and Benchmarks
+
+
+## 13. Size and Performance
+
+### System Size Metrics
+The system size metrics for the .NET Standard library project are influenced by various factors, including dependencies, project references, and the data structures used within the system. The library interacts with PostgreSQL databases and is designed to handle data entries with associated vector embeddings. The size of these embeddings, such as the example size of 1536, directly impacts the size of the data stored and the complexity of vector-based operations. The `PostgresMemoryStore` class, which handles collections of memory records, can scale significantly depending on the number of collections and records managed. The `PostgresMemoryEntry` struct, with properties for keys, metadata, embeddings, and timestamps, also contributes to the system size, with the embedding vectors and metadata complexity influencing performance.
+
+The system is designed to handle different scales of data efficiently, with specific indexing strategies for collections with over 10 million rows and for those with over 10,000 rows. The `PostgresDbClient` class initialization includes a `NpgsqlDataSource` object, a schema name, and a vector size, which are significant metrics affecting the system's size. The `IPostgresDbClient` interface supports batch operations and the retrieval of a large set of tables, indicating the system's capability to manage a moderate to large size.
+
+### Performance Targets and Benchmarks
+Performance targets and benchmarks for the project are centered around the efficiency of database interactions and the overhead introduced by the connector. The system's performance is measured by the efficiency of CRUD operations, the speed of vector-based similarity searches, and the handling of concurrent database queries. Asynchronous methods are used throughout the system to optimize for non-blocking I/O operations and efficient concurrency management.
+
+The `PostgresDbClient` class's `GetNearestMatchesAsync` method performs vector-based similarity searches using the cosine similarity metric, which is computationally intensive and thus a critical factor in performance. The `UpsertAsync` method's sequence diagram indicates a need for quick response times in determining whether to update an existing entry or insert a new one. The pgvector extension for Postgres supports vector similarity search and allows for both exact and approximate nearest neighbor search, with performance tunable by adjusting the number of lists in the index creation and the number of probes during the search.
+
+The UML Class Diagrams and Sequence Diagrams provided in the source document visually represent the structure and operation flow of classes like `PostgresDbClient` and `PostgresMemoryStore`, which are essential for assessing and planning for system performance. The diagrams illustrate the interaction between various components and the asynchronous nature of operations, highlighting potential bottlenecks and areas for optimization.
+
+In summary, the system is designed to be scalable and performant, with a focus on handling large datasets and vector operations efficiently. Performance benchmarks should be established based on typical usage patterns, expected data volumes, and empirical testing during development and testing phases. The UML diagrams serve as a tool for understanding the system's architecture and performance characteristics, aiding in the optimization of the system's size and performance.
+
+
+***
+
+
+## 14. Quality Attributes
+- Security Measures
+- Reliability & Availability
+- Maintainability & Scalability
+
+
+## 14. Quality Attributes
+
+### Security Measures
+Security within the system is implicitly addressed through various practices and configurations. The use of passwords and API keys in code snippets and Docker container setups ensures that database access and external service interactions are protected. While explicit security measures are not detailed in the source code documentation, the nature of the project—a Postgres connector—necessitates the consideration of security measures such as authentication, authorization, encryption, and secure handling of SQL commands to prevent injection attacks.
+
+### Reliability & Availability
+The system is designed with reliability and availability in mind, leveraging .NET Standard 2.0 for broad compatibility and non-blocking asynchronous methods for database operations. This ensures that the system can handle concurrent operations without downtime. The presence of features like `UpsertAsync` enhances data integrity and reliability. Containerization through Docker and support for high availability services like **Azure Database for PostgreSQL - Flexible Server** and **Azure Cosmos DB for PostgreSQL** further contribute to the system's robustness.
+
+### Maintainability & Scalability
+Maintainability is facilitated by a clear project structure, consistent coding styles, and the use of shared properties to avoid duplication. The system's design allows for easy updates, testing, and integration with other systems, as seen with the use of dependency injection and builder patterns. Scalability is addressed through asynchronous programming patterns, batch operations, and dynamic index creation strategies that adapt to the size of the dataset. The system is scalable to different use cases and data sizes, as indicated by the configuration options for vector size and schema name.
+
+### UML Diagramming Information
+UML diagrams are integral to the documentation, providing visual representations of class structures, sequences of operations, and interactions between components. For instance, the UML sequence diagram for the `UpsertAsync` method illustrates the flow of operations between the client, the `IPostgresDbClient` interface, and the database. Although not explicitly provided in the source document, UML diagrams such as Component, Sequence, and Class diagrams could be created to represent the integration of the pgvector extension with Postgres, the steps involved in setting up the Postgres container, and the relationships between various classes in the C# code snippet.
+
+### Practice Extraction for a Small Section
+The practice extraction demonstrates the process of identifying security measures, maintainability, and scalability within a code snippet. It highlights the importance of including passwords for database connections, the use of builder patterns for maintainable system configuration, and the inclusion of parameters like `vectorSize` to accommodate scalability.
+
+
+***
+
+
+## 15. Technical Risks and Mitigations
+- Identified Risks
+- Mitigation Strategies
+- Contingency Plans
+
+
+## 15. Technical Risks and Mitigations
+
+### Identified Risks
+The technical risks identified across the project's components include:
+
+1. **Asynchronous Operations**: The interface methods are asynchronous, which could lead to potential issues with concurrency and data consistency if not handled properly.
+2. **Concurrency and Transaction Management**: The class methods may be subject to race conditions or transactional inconsistencies when multiple instances interact with the same database concurrently.
+3. **Cross-Project Dependencies**: The Postgres connector depends on the `SemanticKernel.Core` project. Changes in the core project could potentially break the connector.
+4. **Database Connection Failures**: The `PostgresMemoryStore` class relies on a stable connection to the PostgreSQL database. Connection issues could lead to failures in initializing the class or during operations.
+5. **Database Connectivity**: The `PostgresDbClient` class relies on a `NpgsqlDataSource` object for database connectivity. Any issues with the PostgreSQL server or network problems could disrupt the service.
+6. **Database Interactions**: Frequent database operations such as upserts, reads, and deletes could result in performance bottlenecks or transactional conflicts.
+7. **Database Interactions**: The system relies on a Postgres database, which introduces a risk of database unavailability or connectivity issues.
+8. **Dependency on External Database**: The system relies on a Postgres database, which introduces a risk of database unavailability or connectivity issues.
+9. **Dependency on External Extension**: The system relies on the [pgvector](https://github.com/pgvector/pgvector) extension for Postgres, which is necessary for vector similarity search. If this extension is not maintained or becomes incompatible with future versions of Postgres, the system's functionality could be compromised.
+10. **Dependency on External Packages**: The project relies on external NuGet packages like `Microsoft.Bcl.AsyncInterfaces` and `Pgvector`. Any breaking changes or discontinuation of these packages could impact the project's functionality.
+11. **Performance Bottlenecks**: The performance may be affected by the size of the embedding vectors and the efficiency of the Postgres memory store implementation.
+12. **Performance Bottlenecks**: The vector-based similarity search could become a performance bottleneck, especially with large datasets and high-dimensional vectors.
+13. **Performance Issues**: The use of approximate nearest neighbor search through pgvector could lead to performance issues, especially as the size of the data grows. This could result in slower query responses and increased load times.
+14. **Schema Changes**: The class is initialized with a schema name, and any changes to the schema could lead to failures in table management and data operations.
+15. **Schema Compatibility**: The default or specified schema used in the Postgres memory store must be compatible with the existing database schema.
+16. **Shared Property Configuration**: Importing shared properties from external files can lead to unexpected behaviors if those shared files are modified without considering all dependent projects.
+17. **Table Management**: The dynamic creation and deletion of tables could lead to data loss if not managed correctly.
+18. **Unique Identifier Collision**: The `Key` property is intended to be a unique identifier. There is a risk of collision if the uniqueness is not enforced, leading to data integrity issues.
+19. **Vector Embeddings**: The querying for nearest matches based on vector similarity requires efficient indexing and could be computationally intensive, affecting performance.
+20. **Vector Size Consistency**: The class is initialized with a vector size that specifies the dimensionality of the vector embeddings. Inconsistencies in vector size could lead to errors during data upserts and similarity searches.
+
+### Mitigation Strategies
+To address the identified risks, the following mitigation strategies have been proposed:
+
+1. **Concurrency Control**: Implement proper synchronization mechanisms or use database transaction features to ensure data consistency during concurrent operations.
+2. **Data Backup**: Regularly back up the database to prevent data loss during table management operations.
+3. **Enforce Key Uniqueness**: Implement checks within the database to ensure that each `Key` is unique before insertion or update.
+4. **Exception Handling**: Define a robust error handling framework within the interface implementation to manage and log exceptions effectively.
+5. **Fallback to Alternative Packages**: Have a list of alternative packages that could replace current dependencies if they become unavailable or unsuitable.
+6. **Indexing**: Use appropriate indexing strategies for vector embeddings to ensure efficient nearest neighbor searches.
+7. **Isolate Core Dependencies**: Abstract the dependencies on `SemanticKernel.Core` through interfaces or adapters to minimize the impact of changes.
+8. **Monitor .NET Standard Evolution**: Keep abreast of changes in .NET Standard and plan for migration to newer versions of .NET if necessary.
+9. **Parameterized Queries**: Use parameterized queries instead of string interpolation to prevent SQL injection vulnerabilities.
+10. **Performance Optimization**: Optimize database queries and use caching where appropriate to improve performance and reduce the load on the database.
+11. **Regularly Update and Test Dependencies**: Keep the project's dependencies up to date and test thoroughly when updating to ensure compatibility.
+12. **Robust Connection Handling**: Implement connection retry policies and robust error handling to manage database connectivity issues.
+13. **Schema Versioning**: Use schema versioning and migration strategies to handle schema changes without disrupting the service.
+14. **Shared Property Management**: Implement strict version control and review processes for shared property files to prevent breaking changes.
+15. **Stable Release Management**: Move to a stable release as soon as the library is mature enough, and maintain a clear release cycle.
+16. **Time Synchronization**: Ensure that all servers interacting with the database are synchronized with a reliable time source to maintain accurate timestamping.
+17. **Transaction Management**: Use database transactions and locking mechanisms to handle concurrent modifications safely.
+18. **Version Control and Interface Stability**: Use semantic versioning for the `SemanticKernel.Core` project and maintain stable interfaces to avoid breaking changes.
+
+### Contingency Plans
+In the event that the mitigation strategies are insufficient, the following contingency plans are in place:
+
+1. **Automated Schema Migration Tools**: Utilize automated schema migration tools to manage schema changes and rollbacks if necessary.
+2. **Backup and Recovery**: Regularly backup the database and test recovery procedures to protect against data corruption or loss.
+3. **Database Failover**: In case of database downtime, switch to a standby database or a pre-configured replica.
+4. **Disaster Recovery**: Establish a disaster recovery plan to restore data from backups in case of critical failures.
+5. **Documentation and Training**: Ensure that the system's documentation is up-to-date and provide training for developers to handle potential risks effectively.
+6. **Fallback Mechanisms**: In case of performance degradation, have a fallback mechanism to a more performant database or a simplified querying mechanism.
+7. **Fallback to Secondary Database**: In case of primary database failure, have a secondary standby database to switch over to.
+8. **Fallback to Previous Version**: In case of incompatibility with new versions of Postgres or pgvector, have a plan to revert to a previous, stable version of the system.
+9. **Framework Compatibility Testing**: Implement a comprehensive testing strategy that includes compatibility tests for different .NET versions.
+10. **Monitoring and Alerts**: Implement monitoring tools to track the health of the database and set up alerts for any anomalies that could indicate issues.
+11. **Pre-release Channels**: Use different distribution channels for stable and pre-release versions to mitigate the risk of consumers using unstable versions.
+12. **Runtime Monitoring**: Implement monitoring to detect vector size inconsistencies and trigger alerts or fallback processes.
+
+***UML Diagramming Information:***
+The UML diagrams provided offer visual representations of the system's components and their interactions. These include class diagrams for the `PostgresMemoryEntry` struct and the `PostgresDbClient` class, as well as sequence diagrams for operations like `UpsertAsync`. These diagrams are essential for understanding the structure and flow of operations within the system and are integral to risk assessment and mitigation planning.
+
+***Key Information Emphasis:***
+- The system's reliance on a Postgres database and the pgvector extension is a significant risk factor.
+- Performance and schema compatibility are critical areas for risk mitigation.
+- Proper configuration and management of data sources and client instances are essential.
+- Contingency plans should be in place for database failover, performance scaling, schema migration, configuration rollback, and client instance monitoring.
+
+
+***
+
+
+## 16. Cross-Cutting Concerns
+- Internationalization
+- Logging and Monitoring
+- Error Handling Strategies
+
+
+## 16. Cross-Cutting Concerns
+
+### Internationalization
+Internationalization is a critical aspect of software development, ensuring that applications can support various character sets and collations to accommodate international data. While the source documents do not explicitly mention internationalization concerns, it is implied that the system should support different locales and character encodings, particularly for a library connecting to Postgres databases that interact with data in multiple languages.
+
+### Logging and Monitoring
+Logging and monitoring are essential for tracking the behavior, performance, and issues of a library in production environments. The source documents suggest that the system has provisions for logging activities, which is crucial for monitoring the system's health and performance, as well as for debugging purposes. The use of a `loggerFactory` indicates that the system is designed to log activities, and the `Timestamp` property within the `PostgresMemoryEntry` struct could be utilized for logging and monitoring purposes, as it records the time at which the entry was created or last modified.
+
+### Error Handling Strategies
+Error handling strategies are vital for managing exceptions, resource cleanup, and communicating errors to client applications. The source documents do not provide specific details on error handling strategies. However, the use of asynchronous methods (`async`) and cancellation tokens (`CancellationToken`) suggests that the classes are designed to handle operation cancellations gracefully. Additionally, the presence of a `Dispose` method indicates that the `PostgresMemoryStore` class implements the `IDisposable` interface for proper resource cleanup, which is part of exception-safe handling and resource management.
+
+### UML Diagramming Information
+UML diagrams offer insights into the class structure and the sequence of operations for key methods, which can be useful for understanding the architecture and potential areas where cross-cutting concerns may be addressed. The source documents include several UML diagrams:
+
+- UML sequence diagram for the `UpsertAsync` method, illustrating the flow of operations when upserting an entry into a table.
+- UML class diagram for the `PostgresMemoryEntry` struct, showing the properties `Key`, `MetadataString`, `Embedding`, and `Timestamp`.
+- UML class diagram for the `PostgresMemoryStore` class, showing its relationship with the `IMemoryStore` interface and the `IPostgresDbClient` object.
+- UML sequence diagram for the `GetNearestMatchesAsync` method, illustrating the interaction between the caller, the `PostgresMemoryStore` class, and the `IPostgresDbClient` object during the execution of a similarity search.
+- UML sequence diagrams that illustrate the interactions between the client, the `MemoryBuilder`, and the `PostgresMemoryStore` for each of the extension methods provided by the `PostgresMemoryBuilderExtensions` class.
+
+These diagrams are consistent with the textual descriptions provided for each method, showing the flow from the client's request to configure the memory builder with a Postgres memory store, through the creation of the `PostgresMemoryStore` instance, and back to the client with the configured builder.
+
+### Examples
+The source document provides examples of how to set up and use the pgvector extension with Postgres, including Docker commands, SQL for creating databases and enabling extensions, and C# code for integrating the Postgres memory store with a semantic kernel. These examples are relevant to the design document section as they touch upon the practical aspects of implementing the system, which may include considerations for logging, monitoring, and error handling.
+
+
+***
+
+
+## 17. Tools and Technologies
+- Development Tools
+- Frameworks and Libraries
+- External Services/APIs
+
+
+## 17. Tools and Technologies
+
+### Development Tools
+The development of the project requires a range of tools to facilitate the creation, testing, and deployment of the software. The primary programming language used is C#, suggesting the use of an Integrated Development Environment (IDE) such as Visual Studio, which supports C# and .NET development. Additionally, Docker is employed for setting up the project environment, specifically for installing the pgvector extension in a Postgres container. XML configuration files are also utilized for defining project structure and dependencies.
+
+### Frameworks and Libraries
+The project is built on the .NET Standard 2.0 framework, ensuring compatibility across various .NET implementations. Asynchronous programming is a key feature, with the `System.Threading.Tasks` namespace being used for `Task` and `IAsyncEnumerable` types. The Npgsql library is a critical component, serving as the PostgreSQL data provider for .NET, which is used in conjunction with the `NpgsqlDataSource` object for database connectivity. The Microsoft.Bcl.AsyncInterfaces package provides additional compatibility for asynchronous interfaces. The Pgvector package is essential for supporting the `pgvector` extension in Postgres, which is integral to the Postgres connector functionality.
+
+### External Services/APIs
+The project interfaces with several external services and APIs. It is designed to work with Semantic Kernel plugins and semantic memory systems, which may involve interactions with related external services or APIs. PostgreSQL is the primary external database service, with the project relying on the `pgvector` extension for vector operations within the database. Cloud database services such as Azure Database for PostgreSQL - Flexible Server and Azure Cosmos DB for PostgreSQL are also supported, both of which accommodate the `pgvector` extension. Additionally, the OpenAI Text Embedding Generation API is used for generating text embeddings, with the code example specifying the "text-embedding-ada-002" model and requiring an API key for access.
+
+### UML Diagramming Information
+The project documentation includes UML diagrams to illustrate the architecture and interactions within the system. Specifically, UML class diagrams provide a visual representation of classes such as `PostgresDbClient` and `PostgresMemoryStore`, detailing their structures and relationships with interfaces like `IMemoryStore` and `IPostgresDbClient`. UML sequence diagrams are also provided to depict the flow of operations for methods such as `UpsertAsync` and `GetNearestMatchesAsync`, showing the interactions between clients, interfaces, and the database. These diagrams are created using the mermaid syntax, a text-based diagramming tool that can be integrated into documentation or development tools that support it.
+
+**Note:** No UML diagrams are applicable for sections solely focused on configuration and setup of the project. However, where class structures and interactions are defined, UML diagrams are included to aid in understanding the system's architecture.
+
+**Abbreviations:**
+- API: Application Programming Interface
+- IDE: Integrated Development Environment
+- UML: Unified Modeling Language
+
+**Examples:**
+- An example of using Docker for setting up the project environment would involve creating a Dockerfile that specifies the installation of the pgvector extension within a Postgres container.
+- A UML class diagram example would show the `PostgresDbClient` class with its private fields and public methods, illustrating how it interacts with the PostgreSQL database through the `IPostgresDbClient` interface.
+
+
+***
+
+
+## 18. References
+- External Documents
+- Standards and Guidelines
+
+
+## 18. References
+
+### External Documents
+The following external documents are referenced in the design and implementation of the software:
+
+- Azure Cosmos DB for PostgreSQL Documentation: Provides guidelines on using the pgvector extension with Azure Cosmos DB for PostgreSQL.
+- Azure Database for PostgreSQL - Flexible Server Documentation: Offers instructions on utilizing the pgvector extension with Azure Database for PostgreSQL - Flexible Server.
+- C# Documentation: Serves as a reference for C# programming constructs and asynchronous programming patterns used in the `PostgresMemoryStore` class.
+- IEEE Standards for Software Documentation: Ensures that the documentation of the `PostgresMemoryStore` class adheres to industry standards for software documentation.
+- JSONB Data Type Documentation: Necessary for understanding the usage, indexing, and query optimization of the JSONB data type within PostgreSQL.
+- KernelSyntaxExamples (Example 14 & 15): Located within the source document's repository, under the directory `../../../samples/KernelSyntaxExamples/`, providing practical examples of syntax usage.
+- Npgsql Documentation: Critical for understanding the implementation and usage of the `NpgsqlDataSource` object within the `PostgresDbClient` class.
+- NuGet Package Metadata: Details the package's purpose as a Postgres connector for Semantic Kernel plugins and semantic memory systems.
+- pgvector GitHub Repository and Installation Documentation: Essential for understanding the pgvector extension used for vector operations and its installation process on Postgres.
+- PostgreSQL Documentation: Serves as a comprehensive guide for PostgreSQL database management, query syntax, and the `pgvector` extension.
+- Postgres Naming Convention: Outlines the naming conventions for identifiers in PostgreSQL.
+
+### Standards and Guidelines
+The project adheres to the following standards and guidelines:
+
+- .NET Design Guidelines: Followed for best practices in designing C# classes, methods, and interfaces, ensuring the `PostgresMemoryStore` class follows .NET conventions.
+- .NET Standard 2.0: The project targets .NET Standard 2.0 for broad compatibility across different .NET implementations.
+- Asynchronous Programming Best Practices in C#: Guidelines followed to ensure best practices in asynchronous programming are applied.
+- Assembly Naming: The assembly name "Microsoft.SemanticKernel.Connectors.Postgres" follows Microsoft's naming conventions for assemblies.
+- C# Asynchronous Programming Guidelines: Ensures that asynchronous methods in the `PostgresDbClient` class adhere to best practices.
+- Data Security and Privacy Standards: Standards related to data security, privacy, and compliance are considered to align the class's operations with legal and ethical requirements.
+- Database Schema Design Standards: Guidelines on schema design are followed to ensure best practices for database structure.
+- Dependency Injection Principles: Applied in the implementation of the `IPostgresDbClient` interface in the `PostgresMemoryStore` class.
+- Interface Design Principles for Database Clients in .NET Applications: Followed to ensure the `IPostgresDbClient` interface is designed according to best practices.
+- Package Dependencies: Specifies dependencies such as "Microsoft.Bcl.AsyncInterfaces" for asynchronous programming interfaces and "Pgvector" for Postgres vector support.
+- Project References: The project references the "SemanticKernel.Core" project, indicating a dependency on its core functionalities.
+- Shared Property Importation: Promotes consistency across the repository by importing shared properties from external files, adhering to the DRY principle.
+- UML Sequence Diagram Standards: Followed for representing object interactions in the provided UML sequence diagrams.
+- Vector Embeddings Standards: Industry standards for vector embeddings, such as dimensionality or storage formats, are referenced to ensure proper handling of vector data.
+- Versioning Strategy: Uses a version suffix "alpha" to indicate a pre-release version, adhering to semantic versioning guidelines.
+
+### UML Diagramming Information
+The UML diagrams provided in the source documents serve as essential references for understanding the structure and behavior of the classes involved:
+
+- UML Class Diagrams: Visual representations of class structures, such as the `PostgresMemoryEntry` struct and the `PostgresMemoryStore` class, detailing their properties, methods, and relationships with other components.
+- UML Sequence Diagrams: Illustrate the flow of operations for methods like `UpsertAsync` in the `IPostgresDbClient` interface and the `GetNearestMatchesAsync` method in the `PostgresMemoryStore` class. These diagrams depict the interactions between clients, interfaces, and databases during operations such as upserts and nearest neighbor searches.
+
+The UML diagrams are integral to the documentation, providing clarity on the design and interaction patterns of the software components.
+
+
+***
+
+
+## 19. Appendix
+- Additional Diagrams
+- Glossary of Terms
+
+
+## 19. Appendix
+
+This appendix serves as a supplementary section to the main body of the design document, providing additional visual representations of the system's behavior and clarifying terminology for readers. It includes UML diagrams that illustrate the structure and interactions within the software, as well as a comprehensive glossary of terms relevant to the Microsoft.SemanticKernel.Connectors.Postgres and the pgvector extension.
+
+### Additional Diagrams
+
+The following UML diagrams have been included to visually represent the structure and behavior of the system:
+
+#### UML Class Diagram for `PostgresDbClient`
+```mermaid
+classDiagram
+    class PostgresDbClient {
+        -NpgsqlDataSource _dataSource
+        -int _vectorSize
+        -string _schema
+        +DoesTableExistsAsync(tableName, cancellationToken)
+        +CreateTableAsync(tableName, cancellationToken)
+        +GetTablesAsync(cancellationToken)
+        +DeleteTableAsync(tableName, cancellationToken)
+        +UpsertAsync(tableName, key, metadata, embedding, timestamp, cancellationToken)
+        +GetNearestMatchesAsync(tableName, embedding, limit, minRelevanceScore, withEmbeddings, cancellationToken)
+        +ReadAsync(tableName, key, withEmbeddings, cancellationToken)
+        +ReadBatchAsync(tableName, keys, withEmbeddings, cancellationToken)
+        +DeleteAsync(tableName, key, cancellationToken)
+        +DeleteBatchAsync(tableName, keys, cancellationToken)
+        -ReadEntryAsync(dataReader, withEmbeddings, cancellationToken)
+        -GetFullTableName(tableName)
+    }
+```
+
+#### UML Sequence Diagram for Upsert Operation
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant P as PostgresDbClient
+    participant DB as Database
+
+    C->>+P: UpsertAsync(tableName, key, metadata, embedding, timestamp)
+    P->>+DB: INSERT INTO tableName...
+    Note over DB: Insert or Update Entry
+    DB-->>-P: Acknowledgement
+    P-->>-C: Completion
+```
+
+#### UML Class Diagram for `PostgresMemoryStore`
+```mermaid
+classDiagram
+    class PostgresMemoryStore {
+        +PostgresMemoryStore(string connectionString, int vectorSize, string schema)
+        +PostgresMemoryStore(NpgsqlDataSource dataSource, int vectorSize, string schema)
+        +PostgresMemoryStore(IPostgresDbClient postgresDbClient)
+        +CreateCollectionAsync(string collectionName)
+        +DoesCollectionExistAsync(string collectionName)
+        +GetCollectionsAsync()
+        +DeleteCollectionAsync(string collectionName)
+        +UpsertAsync(string collectionName, MemoryRecord record)
+        +UpsertBatchAsync(string collectionName, IEnumerable~MemoryRecord~ records)
+        +GetAsync(string collectionName, string key, bool withEmbedding)
+        +GetBatchAsync(string collectionName, IEnumerable~string~ keys, bool withEmbeddings)
+        +RemoveAsync(string collectionName, string key)
+        +RemoveBatchAsync(string collectionName, IEnumerable~string~ keys)
+        +GetNearestMatchesAsync(string collectionName, ReadOnlyMemory~float~ embedding, int limit, double minRelevanceScore, bool withEmbeddings)
+        +GetNearestMatchAsync(string collectionName, ReadOnlyMemory~float~ embedding, double minRelevanceScore, bool withEmbedding)
+        +Dispose()
+    }
+    PostgresMemoryStore --|> IMemoryStore : implements
+    PostgresMemoryStore "1" -- "1" IPostgresDbClient : uses
+```
+
+#### UML Sequence Diagram for GetNearestMatchesAsync
+```mermaid
+sequenceDiagram
+    participant C as Caller
+    participant P as PostgresMemoryStore
+    participant D as IPostgresDbClient
+
+    C->>+P: GetNearestMatchesAsync(collectionName, embedding, limit, minRelevanceScore, withEmbeddings)
+    P->>+D: GetNearestMatchesAsync(tableName, new Vector(embedding), limit, minRelevanceScore, withEmbeddings)
+    D-->>-P: AsyncEnumerable(PostgresMemoryEntry, double)
+    loop For each entry
+        P->>P: GetMemoryRecordFromEntry(entry)
+    end
+    P-->>-C: AsyncEnumerable(MemoryRecord, double)
+```
 
 ### Glossary of Terms
 
-The glossary provides definitions for key terms used throughout the document, organized alphabetically for ease of reference:
+The glossary of terms is organized alphabetically for ease of reference:
 
-- **Asynchronous Method**: A method that runs independently of the main program flow, allowing the program to continue executing while the method completes its task.
-- **Cancellation Token**: A construct in C# that allows signaling to a task or operation that it should be canceled.
-- **Collection**: In databases, a grouping of data, typically represented as a table in SQL databases.
-- **Cosine Similarity**: A measure used to calculate the similarity between two vectors, indicating their similarity.
-- **CRUD**: An acronym for Create, Read, Update, Delete; the basic operations performed on database tables.
-- **Docker**: A platform as a service product that uses OS-level virtualization to deliver software in containers.
-- **Embedding Vector**: A vector representing the features of a record, used for similarity searches.
-- **EnumeratorCancellation**: An attribute in C# indicating that an enumerator should be canceled if the provided `CancellationToken` is triggered.
-- **Extension Method**: A method added to an existing class without modifying its source code, used to extend functionality.
-- **IAsyncEnumerable**: An interface in C# allowing asynchronous iteration over a sequence of values.
-- **IMemoryStore**: An interface defining the structure for memory store implementations.
-- **Index**: A database object that improves the speed of data retrieval operations at the cost of additional writes and storage space.
+- **.NET Standard**: A formal specification of .NET APIs that are intended to be available on all .NET implementations.
+- **AssemblyName**: The name of the compiled assembly, a reusable, versionable, and self-describing building block of a .NET application.
+- **Azure Cosmos DB for PostgreSQL**: A globally distributed, multi-model database service with PostgreSQL compatibility in Azure.
+- **Azure Database for PostgreSQL - Flexible Server**: A managed service that provides a PostgreSQL database in Azure.
+- **Cancellation Token**: A construct in C# that allows cooperative cancellation of asynchronous operations.
+- **CRUD**: Create, Read, Update, Delete - basic operations of persistent storage.
+- **EnumeratorCancellation**: An attribute in C# that propagates the cancellation token to the enumerator of an asynchronous enumerable.
+- **Exact Nearest Neighbor Search**: A search algorithm that finds the closest vector in a dataset to a given query vector.
+- **Extension Method**: A method that is defined as static but appears to be an instance method on the extended type.
+- **IAsyncEnumerable**: An interface in C# that allows asynchronous iteration over a sequence of values.
+- **IMemoryStore**: An interface that defines the contract for memory store operations.
 - **IPostgresDbClient**: An interface defining operations for managing a PostgreSQL database.
-- **MemoryBuilder**: A class in C# designed to configure and manage memory stores.
-- **MemoryRecord**: An object containing a key, metadata, and an optional embedding vector.
-- **Migration Script**: SQL commands used to transfer data from one database schema to another.
-- **NpgsqlDataSource**: An object representing a data source for PostgreSQL database connectivity.
-- **NpgsqlDataSourceBuilder**: A class in C# used to build a data source for connecting to a PostgreSQL database.
-- **pgvector**: A PostgreSQL extension for vector operations, supporting exact and approximate nearest neighbor search.
-- **Postgres**: An open-source object-relational database system.
-- **PostgresMemoryEntry**: A struct representing a single entry in a PostgreSQL database for storing memory-related data.
-- **PostgresMemoryStore**: A class implementing the `IMemoryStore` interface to manage and query memory records in a PostgreSQL database.
-- **Querying**: The process of retrieving nearest matches to a given vector from the database.
-- **Semantic Memory**: Long-term memory involving the capacity to recall words, concepts, and numbers.
-- **Table Management**: Operations related to the creation, check, retrieval, and deletion of database tables.
-- **Task**: In C# and .NET, a representation of an asynchronous operation.
-- **TextMemoryPlugin**: A plugin for semantic memory handling text data.
-- **Timestamp**: A data type recording the date and time of an entry.
-- **UML (Unified Modeling Language)**: A standardized modeling language used to visualize the design of a system.
-- **Upsert**: An operation combining "update" and "insert", referring to either updating an existing entry or creating a new one if it does not exist.
-- **Vector Embedding**: A mathematical representation of data, often used in machine learning and similarity searches.
-- **Vector Size**: Refers to the size of the embedding vectors used within a memory store.
-- **VersionSuffix**: A suffix added to the version number indicating a pre-release version.
+- **JSONB**: A data type in PostgreSQL that stores JSON data in a decomposed binary format.
+- **MemoryBuilder**: A class within a framework designed to configure and manage memory stores.
+- **MemoryRecord**: A data structure that contains a key, metadata, and an optional embedding vector.
+- **NpgsqlDataSource**: A class in C# that represents a connection to a PostgreSQL database.
+- **NpgsqlDataSourceBuilder**: A class used to build a data source for Npgsql, a .NET data provider for PostgreSQL.
+- **NuGet Package**: A package manager for .NET that provides a centralized repository for package distribution.
+- **PackageReference**: An element in the project file that specifies a package dependency.
+- **pgvector**: An extension for Postgres, presumably related to vector operations or data types within the database.
+- **Postgres**: An open-source relational database management system.
+- **PostgresDbClient**: A C# class designed to interact with PostgreSQL databases, particularly for operations involving vector embeddings.
+- **PostgresMemoryEntry**: A data structure representing an entry in a PostgreSQL database, which may include a key, metadata, vector embedding, and timestamp.
+- **PostgresMemoryStore**: A database memory connector that interacts with a Postgres database.
+- **Primary Key**: A unique identifier for a record in a database table.
+- **ProjectReference**: An element in the project file that specifies a dependency on another project within the same solution.
+- **RootNamespace**: The default namespace used by the compiler when it compiles code files.
+- **Semantic Kernel**: A conceptual term likely related to the core functionality of the software that deals with semantic memory or data processing.
+- **Semantic Memory**: A type of memory store that is used for storing and retrieving knowledge about the world.
+- **TargetFramework**: The specification of the version of the .NET framework that the project is intended to run on.
+- **Task**: In the context of C# and .NET, a Task represents an asynchronous operation that can return a value.
+- **TextMemoryPlugin**: A plugin for semantic memory that deals with text.
+- **Timestamp**: A sequence of characters or encoded information identifying when a certain event occurred.
+- **UML**: Unified Modeling Language - a standardized modeling language in the field of software engineering.
+- **Vector Embedding**: A mathematical representation of data, typically used in the context of machine learning and similarity searches.
+- **VersionSuffix**: A label appended to the version number to indicate a pre-release version.
 
-This comprehensive appendix serves as a reference to understand the system's architecture and terminology, ensuring clarity and facilitating the navigation of the document.
+The appendix provides a clear and structured overview of the additional diagrams and terms used throughout the design document, ensuring that readers have a comprehensive understanding of the system's architecture and components.
 
 
 ***
@@ -660,11 +1053,26 @@ This comprehensive appendix serves as a reference to understand the system's arc
 
 ## 20. Approval Sheet
 
-The source document provided does not contain any information related to the "Approval Sheet" section of a design document. Specifically, it lacks details on signatures of key stakeholders, approval status, and dates. The document is a technical overview of various components of a .NET Standard library project for a Postgres connector, including the `IPostgresDbClient` interface, `PostgresDbClient` class, `PostgresMemoryBuilderExtensions` class, `PostgresMemoryEntry` struct, and `PostgresMemoryStore` class. It includes descriptions of methods, code snippets, UML diagrams, and instructions for using the pgvector extension, but it does not mention any approval processes, stakeholders, or related administrative details.
+This section of the document serves as a formal record of the consensus on the design, functionality, and implementation of the components described within the Microsoft.SemanticKernel.Connectors.Postgres project. It is essential for capturing the acknowledgment and agreement of key stakeholders on the project's deliverables. The Approval Sheet will include the following:
 
-Therefore, there is no relevant information to extract for the specific section of the design document concerning the "Approval Sheet." If such information is required, it would likely be found in a different part of the design documentation or project management artifacts, not within the technical overview of a class and its methods.
+- **Signatures of Key Stakeholders**: Each stakeholder who has reviewed and approved the design document will sign here. The signatures validate the stakeholders' agreement with the project's current state, including the `PostgresDbClient` class, `PostgresMemoryStore` class, `PostgresMemoryEntry` struct, and the `PostgresMemoryBuilderExtensions` class, as well as the setup and usage instructions for the pgvector extension.
 
-- Signatures of Key Stakeholders: Not applicable as the source document does not include this information.
-- Approval Status and Dates: Not applicable as the source document does not include this information.
+- **Approval Status and Dates**: This section will document the approval status (approved, rejected, or pending) for each stakeholder, along with the corresponding dates. This information is crucial for tracking the progress and formal approval process of the project.
 
-In conclusion, the "Approval Sheet" section cannot be completed based on the current source document. Additional project management or design approval documents would be needed to provide the necessary information for this section.
+The Approval Sheet will encompass the following key components and functionalities as outlined in the design document:
+
+- The `PostgresDbClient` class, which provides asynchronous CRUD operations, vector-based similarity searches, and table management functionalities.
+- The `PostgresMemoryStore` class, which implements the `IMemoryStore` interface and offers collection management, record management, and similarity search functionalities.
+- The `PostgresMemoryEntry` struct, which defines the properties of a memory entry, including key, metadata, embedding, and timestamp.
+- The `PostgresMemoryBuilderExtensions` class, which facilitates the registration of a Postgres memory store into a `MemoryBuilder` configuration using various parameters.
+
+Additionally, the Approval Sheet will reference the UML diagrams provided in the design document, which serve as visual aids for understanding the structure and interactions of the classes and methods. These include:
+
+- UML Sequence Diagram for the `UpsertAsync` method in the `PostgresDbClient` class.
+- UML Class Diagram for the `PostgresDbClient` class.
+- UML Sequence Diagrams for the `WithPostgresMemoryStore` methods in the `PostgresMemoryBuilderExtensions` class.
+- UML Class Diagram for the `PostgresMemoryStore` class.
+
+The Approval Sheet will also reflect the technical components and setup instructions for using the Microsoft.SemanticKernel.Connectors.Postgres with the pgvector extension, including Docker installation, database creation, and indexing strategy. A migration script is provided to assist with the transition to the new structure of using separate tables for each collection, adhering to Postgres naming conventions.
+
+In conclusion, the Approval Sheet will serve as a comprehensive record of the design and implementation standards, functionalities, and interactions within the project, as well as the stakeholders' consent to proceed with the project as described.
