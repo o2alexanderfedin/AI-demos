@@ -318,6 +318,33 @@ IPostgresDbClient <.. PostgresMemoryBuilderExtensions : uses
 @enduml
 ```
 
+```plantuml
+class MemoryBuilder {
+    +WithMemoryStore(Func~MemoryStore~)
+}
+
+class PostgresMemoryStore {
+    -string connectionString
+    -int vectorSize
+    -string schema
+    +PostgresMemoryStore(string, int, string)
+    +PostgresMemoryStore(NpgsqlDataSource, int, string)
+    +PostgresMemoryStore(IPostgresDbClient)
+}
+
+class NpgsqlDataSource {
+}
+
+interface IPostgresDbClient {
+}
+
+MemoryBuilder <.. PostgresMemoryBuilderExtensions : extends with
+PostgresMemoryStore <.. PostgresMemoryBuilderExtensions : creates instances
+NpgsqlDataSource <.. PostgresMemoryBuilderExtensions : uses
+IPostgresDbClient <.. PostgresMemoryBuilderExtensions : uses
+```
+
+
 4. `PostgresMemoryEntry` Struct:
 ```mermaid
 classDiagram
