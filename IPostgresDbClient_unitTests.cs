@@ -1,60 +1,119 @@
+using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.SemanticKernel.Connectors.Postgres;
-using Moq;
 using Xunit;
 
-namespace Microsoft.SemanticKernel.UnitTests.Connectors.Postgres;
+namespace Microsoft.SemanticKernel.Connectors.Postgres.Tests;
 
 public class PostgresDbClientTests
 {
     [Fact]
-    public async Task DoesTableExistAsync_ValidTableName_ReturnsExpectedResult()
+    public async Task DoesTableExistsAsync_WhenTableExists_ReturnsTrue()
     {
         // Arrange
-        var tableName = "valid_table";
+        var tableName = "existingTable";
         var mockClient = new Mock<IPostgresDbClient>();
         mockClient.Setup(client => client.DoesTableExistsAsync(tableName, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(true);
-        var client = mockClient.Object;
+                  .ReturnsAsync(true);
+        var cancellationToken = new CancellationToken(false);
 
         // Act
-        var result = await client.DoesTableExistsAsync(tableName);
+        var result = await mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken);
 
         // Assert
         Assert.True(result);
     }
 
     [Fact]
-    public async Task DoesTableExistAsync_NullTableName_ThrowsArgumentNullException()
+    public async Task DoesTableExistsAsync_WhenTableDoesNotExist_ReturnsFalse()
     {
         // Arrange
-        string tableName = null;
+        var tableName = "nonExistingTable";
         var mockClient = new Mock<IPostgresDbClient>();
-        var client = mockClient.Object;
+        mockClient.Setup(client => client.DoesTableExistsAsync(tableName, It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(false);
+        var cancellationToken = new CancellationToken(false);
 
-        // Act and Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(async () => await client.DoesTableExistsAsync(tableName));
+        // Act
+        var result = await mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken);
+
+        // Assert
+        Assert.False(result);
     }
 
+    // Ensures that TaskCanceledException is thrown when the operation is canceled
     [Fact]
-    public async Task DoesTableExistAsync_EmptyTableName_ThrowsArgumentException()
+    public async Task DoesTableExistsAsync_WithCancelledToken_ThrowsTaskCanceledException()
+    {
+        // Arrange
+        var tableName = "testTable";
+        var mockClient = new Mock<IPostgresDbClient>();
+        var cancellationToken = new CancellationToken(true);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<TaskCanceledException>(() => mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken));
+    }
+
+    // Ensures that the method throws ArgumentException when an invalid table name (empty string) is provided.
+    [Fact]
+    public async Task DoesTableExistsAsync_WithEmptyTableName_ThrowsArgumentException()
     {
         // Arrange
         var tableName = string.Empty;
         var mockClient = new Mock<IPostgresDbClient>();
-        var client = mockClient.Object;
+        var cancellationToken = new CancellationToken(false);
 
-        // Act and Assert
-        await Assert.ThrowsAsync<ArgumentException>(async () => await client.DoesTableExistsAsync(tableName));
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken));
     }
     
-    // Additional tests should be added here to cover various edge cases, such as:
-    // - Testing with whitespace-only table names
-    // - Testing behavior when the underlying call throws an exception (simulating a database error)
+    // Additional unit tests based on the review feedback:
+    
+    // Tests the method with null as the table name, ensuring that ArgumentNullException is thrown.
+    [Fact]
+    public async Task DoesTableExistsAsync_WithNullTableName_ThrowsArgumentNullException()
+    {
+        // Arrange
+        string tableName = null;
+        var mockClient = new Mock<IPostgresDbClient>();
+        var cancellationToken = new CancellationToken(false);
+        
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(() => mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken));
+    }
 
-    // Note: Real database interactions are typically not tested in unit tests due to the complexity and
-    // dependence on external infrastructure. Instead, we would usually mock the behavior to simulate the underlying
-    // storage action. For integration tests, we would use an actual database connection to ensure everything works end-to-end.
+    // Tests the method with white space as the table name, ensuring that ArgumentException is thrown.
+    [Fact]
+    public async Task DoesTableExistsAsync_WithWhiteSpaceTableName_ThrowsArgumentException()
+    {
+        // Arrange
+        var tableName = "   ";
+        var mockClient = new Mock<IPostgresDbClient>();
+        var cancellationToken = new CancellationToken(false);
+        
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(() => mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken));
+    }
+    
+    // Tests the method providing a valid, non-canceled token to ensure normal operation.
+    [Fact]
+    public async Task DoesTableExistsAsync_WithNonCancelledToken_CompletesSuccessfully()
+    {
+        // Arrange
+        var tableName = "existingTable";
+        var mockClient = new Mock<IPostgresDbClient>();
+        mockClient.Setup(client => client.DoesTableExistsAsync(tableName, It.IsAny<CancellationToken>()))
+                  .ReturnsAsync(true);
+        using (var cts = new CancellationTokenSource())
+        {
+            var cancellationToken = cts.Token;
+            
+            // Act
+            var result = await mockClient.Object.DoesTableExistsAsync(tableName, cancellationToken);
+            
+            // Assert
+            Assert.True(result);
+        }
+    }
 }
