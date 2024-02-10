@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Maven POM file for the Semantic Kernel JDBC Memory Connector module.
+  This file includes the module's metadata and defines its dependencies.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Inheritance configuration for shared build settings and properties -->
+    <parent>
+        <groupId>com.microsoft.semantic-kernel</groupId>
+        <artifactId>semantickernel-parent</artifactId>
+        <version>0.2.10-alpha-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath> <!-- Relative path to the parent POM -->
+    </parent>
+
+    <artifactId>semantickernel-connectors-memory-jdbc</artifactId>
+    <!-- Informative name for the component this POM represents -->
+    <name>Semantic Kernel JDBC Memory Connector</name>
+
+    <!-- Dependencies section: lists all the module dependencies required for building and testing -->
+    <dependencies>
+        <!-- Jackson libraries for parsing and generating JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope> <!-- Dependency used in the main compilation process -->
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>compile</scope> <!-- Dependency used in the main compilation process -->
+        </dependency>
+
+        <!-- Semantic Kernel API dependency for accessing core functionality -->
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-api</artifactId>
+            <!-- The version of semantickernel-api is managed by the parent POM -->
+        </dependency>
+
+        <!-- Mockito and JUnit are frameworks used for unit testing in Java -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <!-- The scope and version are not specified here because they are managed by the parent POM or defaults are used -->
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <!-- The scope and version can be potentially managed by the parent POM -->
+        </dependency>
+
+        <!-- Log4j is used for logging test outputs -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <scope>test</scope> <!-- Dependency used only for testing -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <scope>test</scope> <!-- Dependency used only for testing -->
+        </dependency>
+
+        <!-- This is a duplicate dependency and should be evaluated for removal -->
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-api</artifactId>
+            <!-- Appears twice in this POM, review if necessary -->
+        </dependency>
+
+    </dependencies>
+</project>
