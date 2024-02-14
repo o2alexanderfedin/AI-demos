@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Project Configuration -->
+  <PropertyGroup>
+    <!-- Set the assembly name which defines the output file name for the compilation result -->
+    <AssemblyName>Microsoft.SemanticKernel.Connectors.Postgres</AssemblyName>
+    <!-- Define the default namespace for the project, mirroring the assembly name -->
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    <!-- Specify the targeted .NET Standard version for compatibility across different platforms -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- Append an identifier to the version to indicate it's a pre-release -->
+    <VersionSuffix>alpha</VersionSuffix>
+  </PropertyGroup>
+
+  <!-- Shared Project Properties -->
+  <!-- Include build configuration and utility properties shared across projects in the repository -->
+  <Import Project="$(RepoRoot)/dotnet/nuget/nuget-package.props" />
+  <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/src/InternalUtilities.props" />
+
+  <!-- NuGet Package Metadata -->
+  <PropertyGroup>
+    <!-- Title for the package indicating its contents -->
+    <Title>Semantic Kernel - Postgres Connector</Title>
+    <!-- Brief description of the package's functionality -->
+    <Description>Postgres(with pgvector extension) connector for Semantic Kernel plugins and semantic memory</Description>
+  </PropertyGroup>
+
+  <!-- Dependencies -->
+  <ItemGroup>
+    <!-- Required to enable asynchronous programming interfaces matching newer .NET versions -->
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <!-- Vector data type support for Postgres, integral for the connector's operations -->
+    <PackageReference Include="Pgvector" />
+  </ItemGroup>
+
+  <!-- Project Dependencies -->
+  <ItemGroup>
+    <!-- Core library containing the base functionality that the Postgres connector will extend -->
+    <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
+  </ItemGroup>
+
+</Project>
